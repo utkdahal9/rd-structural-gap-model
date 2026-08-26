@@ -21,17 +21,20 @@ metric — raw square footage, not log-space — never run through that
 conversion. They're ABSOLUTE figures that scale with market size, so a
 large metro can rank higher on this measure than a smaller metro with
 a bigger PERCENTAGE gap. Both are shown, clearly labeled, rather than
-picking one.
+picking one. The "Highest/Lowest in Region" ranking language is used
+deliberately instead of "Surplus/Deficit" for this metric, since that
+wording is reserved for the model's own Market_Category classification
+and the two must not be conflated.
 
 MARKET_CATEGORY NOTE: "Structurally Balanced" / "Moderate Surplus" /
 etc. are NOT based on a fixed percentage threshold. They come from the
 model's own classification: a z-score of the gap against LOOCV_SIGMA
-(the model's typical prediction noise, ~0.356 log units / dynamically
-loaded from SizeBias_Correction_Verification.csv). That means
-"Structurally Balanced" spans roughly -16% to +19%, not some narrow
-band around zero. This dashboard always uses the model's own category
-label rather than recomputing a different one, and explains the real
-thresholds explicitly wherever the category is shown.
+(the model's typical prediction noise, dynamically loaded from
+SizeBias_Correction_Verification.csv). That means "Structurally
+Balanced" spans roughly -16% to +19%, not some narrow band around
+zero. This dashboard always uses the model's own category label rather
+than recomputing a different one, and explains the real thresholds
+explicitly wherever the category is shown.
 
 NARRATIVE NOTE: every chart is followed by a plain-English "Takeaway"
 sentence computed live from the actual data. Bold text is reserved for
@@ -150,7 +153,10 @@ def category_explainer_text() -> str:
         f"{mod_hi:+.0f}%, **Moderate Deficit** {sig_lo:+.0f}% to "
         f"{mod_lo:+.0f}%, and **Significant Deficit** below {sig_lo:+.0f}%. "
         f"That's why a double-digit negative number can still read as "
-        f"\"balanced\" — the bands are wider than intuition suggests."
+        f"\"balanced\" — the bands are wider than intuition suggests. "
+        f"This is a separate system from the \"Highest/Lowest in Region\" "
+        f"ranking shown elsewhere, which is based on absolute square "
+        f"footage, not this statistical classification."
     )
 
 
@@ -162,11 +168,12 @@ CASE_STUDY_IMAGES = {
 
 RANK_VS_PCT_NOTE = (
     "Rank is based on absolute R&D-weighted square footage, which "
-    "scales with market size — a large metro can outrank a smaller one "
-    "even with a lower percentage gap, because the same percentage move "
-    "represents far more square feet in a bigger market. Percentage and "
-    "absolute rank are expected to disagree; neither is \"the real\" "
-    "number, they answer different questions."
+    "scales with market size — a large metro can rank higher (or "
+    "lower) than a smaller one even with a smaller percentage gap, "
+    "because the same percentage move represents far more square feet "
+    "in a bigger market. This ranking and the percentage figure answer "
+    "different questions and can point in different directions; "
+    "neither overrides the other."
 )
 
 
@@ -352,15 +359,17 @@ with tab_regional:
             st.warning("`Structural_Gap` column not found in results export.")
 
     st.divider()
-    st.subheader("Top surplus and deficit markets by region")
+    st.subheader("Highest and lowest R&D-weighted markets by region")
     st.markdown(
-        "The five biggest surpluses and five biggest deficits within "
-        "each Census region, ranked by R&D-weighted gap in absolute "
-        "square feet. The percentage shown is that MSA's own overall "
-        "structural gap, for consistency with the rest of this "
-        "dashboard — it will sometimes look inconsistent with the "
-        "\"Surplus\"/\"Deficit\" label, since the ranking and the "
-        "percentage measure different things."
+        "The five highest and five lowest R&D-weighted gaps, in absolute "
+        "square feet, within each Census region. This is a pure ranking "
+        "within the region, not a statistical classification — a metro "
+        "can land in the \"Lowest\" group even with a positive percentage "
+        "gap, if its absolute weighted square footage is still smaller "
+        "than its regional peers'. New York, for example, shows a mildly "
+        "positive percentage gap but still ranks among the Northeast's "
+        "lowest absolute R&D-weighted values, because that measure "
+        "reflects market size as well as direction."
     )
     st.markdown(RANK_VS_PCT_NOTE)
     top5 = load_csv("Regional_Top5_RDWeighted_v14b.csv")
@@ -368,14 +377,19 @@ with tab_regional:
         missing_data_notice("Regional_Top5_RDWeighted_v14b.csv")
     else:
         pct_lookup = latest_pct_lookup(results)
+        rank_label_map = {
+            "Top 5 Surplus": "Highest in Region (R&D-weighted SF)",
+            "Top 5 Deficit": "Lowest in Region (R&D-weighted SF)",
+        }
         region_pick = st.selectbox("Select a region", REGIONS, key="top5_region")
         region_df = top5[top5["Region"] == region_pick].copy()
+        rank_type_col = find_col(region_df, ["Rank_Type"])
+        if rank_type_col:
+            region_df["Rank"] = region_df[rank_type_col].map(rank_label_map).fillna(region_df[rank_type_col])
         if pct_lookup is not None:
             region_df["Structural_Gap_%"] = region_df["MSA_Name"].map(pct_lookup).round(1)
-            st.dataframe(
-                region_df[["MSA_Name", "Structural_Gap_%", "Rank_Type"]],
-                use_container_width=True, hide_index=True,
-            )
+            show_cols = [c for c in ["MSA_Name", "Structural_Gap_%", "Rank"] if c in region_df.columns]
+            st.dataframe(region_df[show_cols], use_container_width=True, hide_index=True)
         else:
             st.dataframe(region_df, use_container_width=True, hide_index=True)
 
