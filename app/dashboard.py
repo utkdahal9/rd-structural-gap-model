@@ -16,6 +16,13 @@ Structural_Gap (and Deviation0) in the source CSVs are log-space values.
 Everywhere this app displays these to a person, it converts them to a
 percentage via (exp(x) - 1) * 100 for readability.
 
+EQUILIBRIUM NOTE: the mean-reversion forecast does not project the gap
+back to 0%. Each MSA reverts toward its OWN long-run equilibrium target
+(Residual_Equilibrium + Bias_2023 in the source data), which is usually
+NOT zero. The national number is the R&D-weighted average of all 100
+of those individual targets. This dashboard computes and displays the
+real target explicitly, rather than assuming it's zero.
+
 NARRATIVE NOTE: every chart is followed by a plain-English "Takeaway"
 sentence computed live from the actual data, not hardcoded. Bold text
 is reserved for section-opening labels only (e.g. "Takeaway:") — never
@@ -264,10 +271,26 @@ with tab_regional:
 with tab_forecast:
     st.markdown(
         "This isn't a prediction of how many square feet will exist in "
-        "2045. It models how fast each MSA's current deviation from its "
-        "own pre-COVID equilibrium closes, the trajectory back toward "
-        "normal, not a single future snapshot."
+        "2045. Each MSA's forecast reverts toward its OWN long-run "
+        "equilibrium level, not toward zero, so the national gap "
+        "settling above 0% doesn't mean the market never normalizes — "
+        "it means the model's estimate of \"normal\" for this metric "
+        "isn't zero to begin with."
     )
+
+    msa_fc = load_csv("MeanReversion_RDWeighted_ByMSA_v14b.csv")
+    lam_fc = load_csv("MeanReversion_RDWeighted_Lambda_Sensitivity_v14b.csv")
+    results_hist = load_csv("AvailSFTotal_Counterfactual_Results.csv")
+
+    national_target_pct = None
+    if msa_fc is not None:
+        eq_col = find_col(msa_fc, ["Residual_Equilibrium"])
+        bias_col = find_col(msa_fc, ["Bias_2023"])
+        weight_col = find_col(msa_fc, ["RD_Weight_2023"])
+        if eq_col and bias_col and weight_col:
+            eq_forecast_all = msa_fc[eq_col] + msa_fc[bias_col]
+            national_target_log = np.average(eq_forecast_all, weights=msa_fc[weight_col])
+            national_target_pct = to_pct(pd.Series([national_target_log])).iloc[0]
 
     national_fc = load_csv("MeanReversion_RDWeighted_National_2015_2045_v14b.csv")
     if national_fc is None:
@@ -314,8 +337,11 @@ with tab_forecast:
                 mode="lines", name="Forecast (median)",
                 line=dict(color="#1f77b4", width=2.5, dash="dash"),
             ))
-            fig.add_hline(y=0, line_dash="dot", line_color="gray",
-                          annotation_text="Equilibrium")
+            if national_target_pct is not None:
+                fig.add_hline(
+                    y=national_target_pct, line_dash="dot", line_color="gray",
+                    annotation_text=f"R&D-weighted long-run target ({national_target_pct:+.1f}%)",
+                )
             fig.update_layout(
                 title="National R&D-Weighted Structural Gap — Actual and Projected Path to 2045",
                 yaxis_title="Structural gap (%)",
@@ -323,96 +349,133 @@ with tab_forecast:
             )
             st.plotly_chart(fig, use_container_width=True)
 
-            final_year = int(fc[year_col].max())
-            final_pct = fc["pct_median"].iloc[-1]
-            near_zero = fc[fc["pct_median"].abs() <= 5]
-            if not near_zero.empty:
-                closure_year = int(near_zero[year_col].min())
+            canonical_year = None
+            if lam_fc is not None:
+                is_mean_col = find_col(lam_fc, ["Is_Assumed_Mean"])
+                lam_year_col = find_col(lam_fc, ["Year"])
+                if is_mean_col and lam_year_col:
+                    mean_row = lam_fc[lam_fc[is_mean_col] == True]
+                    if not mean_row.empty:
+                        canonical_year = int(mean_row.iloc[0][lam_year_col])
+
+            if national_target_pct is not None and canonical_year:
                 takeaway = (
-                    f"**Takeaway:** the market is projected to settle "
-                    f"within ±5% of equilibrium by {closure_year}."
+                    f"**Takeaway:** the market isn't projected to return to "
+                    f"0% — it's projected to settle near its R&D-weighted "
+                    f"long-run target of {national_target_pct:+.1f}%, which "
+                    f"reflects a lasting (not fully reversing) shift. At "
+                    f"the model's assumed reversion speed, that settling "
+                    f"is essentially complete by **{canonical_year}**."
                 )
             else:
+                final_pct = fc["pct_median"].iloc[-1]
+                final_year = int(fc[year_col].max())
                 takeaway = (
-                    f"**Takeaway:** the gap is projected to narrow "
-                    f"substantially but not fully close, settling around "
-                    f"{final_pct:+.1f}% by {final_year} rather than "
-                    f"returning to equilibrium within this forecast window."
+                    f"**Takeaway:** the gap is projected to narrow toward "
+                    f"{final_pct:+.1f}% by {final_year}, its apparent "
+                    f"long-run level, rather than returning to 0%."
                 )
             st.markdown(takeaway)
 
     st.divider()
-    msa_fc = load_csv("MeanReversion_RDWeighted_ByMSA_v14b.csv")
     if msa_fc is not None:
-        st.subheader("Per-MSA equilibrium status")
-        st.markdown(
-            "This file captures each MSA's equilibrium anchor and its "
-            "distance from it as of 2023, not a full year-by-year series. "
-            "Using the 30%/year decay rate documented in the methodology, "
-            "the chart below projects each MSA's own path back toward "
-            "equilibrium — an approximation based on the standard rate, "
-            "not a per-MSA calibrated forecast. See "
-            "MeanReversion_RDWeighted_Lambda_Sensitivity_v14b.csv in the "
-            "repo for how sensitive this is to that assumption."
-        )
+        st.subheader("Per-MSA equilibrium trajectory")
+
+        canonical_year = None
+        if lam_fc is not None:
+            is_mean_col = find_col(lam_fc, ["Is_Assumed_Mean"])
+            lam_year_col = find_col(lam_fc, ["Year"])
+            if is_mean_col and lam_year_col:
+                mean_row = lam_fc[lam_fc[is_mean_col] == True]
+                if not mean_row.empty:
+                    canonical_year = int(mean_row.iloc[0][lam_year_col])
+
+        if canonical_year:
+            st.markdown(
+                f"At the model's assumed reversion speed (λ=30%/year), "
+                f"every MSA closes 95% of its own remaining deviation by "
+                f"**{canonical_year}** — this timing doesn't depend on how "
+                f"large a given MSA's current gap is, since the same share "
+                f"closes each year. What differs by MSA is where it lands: "
+                f"each metro reverts toward its own historical equilibrium, "
+                f"which is rarely exactly zero."
+            )
+
         msa_name_col = find_col(msa_fc, ["MSA_Name", "MSA"])
         dev_col = find_col(msa_fc, ["Deviation0"])
-        converged_col = find_col(msa_fc, ["Already_Converged_2023", "Already_Converged"])
+        eq_col = find_col(msa_fc, ["Residual_Equilibrium"])
+        bias_col = find_col(msa_fc, ["Bias_2023"])
+        converged_col = find_col(msa_fc, ["Already_Converged_2023"])
 
-        if msa_name_col and dev_col:
+        if msa_name_col and dev_col and eq_col and bias_col:
             msa_pick = st.selectbox(
                 "Select an MSA", sorted(msa_fc[msa_name_col].unique()), key="forecast_msa"
             )
             row = msa_fc[msa_fc[msa_name_col] == msa_pick].iloc[0]
             dev0 = row[dev_col]
-            dev0_pct = to_pct(pd.Series([dev0])).iloc[0]
+            eq_fc = row[eq_col] + row[bias_col]
+            eq_fc_pct = to_pct(pd.Series([eq_fc])).iloc[0]
 
-            LAMBDA = 0.30
-            THRESH_LOG = np.log(1.05)  # treat +/-5% as effectively converged
-            anchor_year, max_year = 2023, 2045
-            years = list(range(anchor_year, max_year + 1))
-            traj = [dev0 * ((1 - LAMBDA) ** (y - anchor_year)) for y in years]
-            traj_pct = to_pct(pd.Series(traj)).tolist()
+            years = list(range(2023, 2046))
+
+            def traj_pct_for(lam):
+                vals = [eq_fc + dev0 * ((1 - lam) ** (y - 2023)) for y in years]
+                return to_pct(pd.Series(vals)).tolist()
+
+            median_traj = traj_pct_for(0.30)
+            slow_traj = traj_pct_for(0.05)
+            fast_traj = traj_pct_for(0.60)
+            band_lo = [min(a, b) for a, b in zip(slow_traj, fast_traj)]
+            band_hi = [max(a, b) for a, b in zip(slow_traj, fast_traj)]
 
             fig = go.Figure()
             fig.add_trace(go.Scatter(
-                x=years, y=traj_pct, mode="lines",
-                name="Projected path (30%/yr decay)",
+                x=years + years[::-1], y=band_hi + band_lo[::-1],
+                fill="toself", fillcolor="rgba(31,119,180,0.12)",
+                line=dict(color="rgba(255,255,255,0)"),
+                name="Range across plausible reversion speeds",
+            ))
+
+            if results_hist is not None and "Structural_Gap" in results_hist:
+                hmsa = results_hist[results_hist["MSA_Name"] == msa_pick].sort_values("Year")
+                hmsa = hmsa[hmsa["Year"] <= 2023]
+                if not hmsa.empty:
+                    fig.add_trace(go.Scatter(
+                        x=hmsa["Year"], y=to_pct(hmsa["Structural_Gap"]),
+                        mode="lines", name="Actual (historical)",
+                        line=dict(color="#1f77b4", width=2.5),
+                    ))
+
+            fig.add_trace(go.Scatter(
+                x=years, y=median_traj, mode="lines",
+                name="Forecast (median reversion speed)",
                 line=dict(color="#1f77b4", width=2.5, dash="dash"),
             ))
-            fig.add_hline(y=0, line_dash="dot", line_color="gray",
-                          annotation_text="Equilibrium")
+            fig.add_hline(
+                y=eq_fc_pct, line_dash="dot", line_color="gray",
+                annotation_text=f"This MSA's own long-run target ({eq_fc_pct:+.1f}%)",
+            )
             fig.update_layout(
-                title=f"{msa_pick} — Projected Path to Equilibrium",
-                yaxis_title="Deviation from equilibrium (%)",
+                title=f"{msa_pick} — Structural Gap, Actual and Projected Path",
+                yaxis_title="Structural gap (%)",
                 xaxis_title="Year",
             )
             st.plotly_chart(fig, use_container_width=True)
 
             already_converged = bool(row[converged_col]) if converged_col else None
+            dev0_pct = to_pct(pd.Series([dev0])).iloc[0]
             if already_converged:
-                status = "This MSA was already within the effectively-converged range as of 2023."
+                status = "this MSA was already close to its own equilibrium as of 2023"
             else:
-                if abs(dev0) <= THRESH_LOG:
-                    close_yr = anchor_year
-                else:
-                    t = np.log(THRESH_LOG / abs(dev0)) / np.log(1 - LAMBDA)
-                    proj_year = anchor_year + int(np.ceil(t))
-                    close_yr = proj_year if proj_year <= max_year else None
-                if close_yr:
-                    status = (
-                        f"Starting from a {dev0_pct:+.1f}% deviation in 2023, "
-                        f"this MSA is projected to settle within ±5% of "
-                        f"equilibrium by {close_yr} at the standard decay rate."
-                    )
-                else:
-                    status = (
-                        f"Starting from a {dev0_pct:+.1f}% deviation in 2023, "
-                        f"this MSA is not projected to fully close within "
-                        f"the {max_year} forecast window at the standard "
-                        f"decay rate."
-                    )
-            st.markdown(f"**Takeaway:** {status}")
+                status = (
+                    f"as of 2023 this MSA sat {dev0_pct:+.1f} percentage "
+                    f"points from its own long-run target"
+                )
+            st.markdown(
+                f"**Takeaway:** {status}; that target is {eq_fc_pct:+.1f}%, "
+                f"not 0%, reflecting a level specific to this metro rather "
+                f"than full reversion to the no-COVID counterfactual."
+            )
         else:
             st.dataframe(msa_fc, use_container_width=True, hide_index=True)
 
