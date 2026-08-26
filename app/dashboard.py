@@ -3,7 +3,8 @@ R&D Space Market Structural Gap — Interactive Dashboard
 =========================================================
 Streamlit app for exploring the COVID-19 structural-gap counterfactual
 model's results: national trends, by-MSA detail, regional comparisons,
-and the 2045 mean-reversion forecast.
+model validation, named case studies, and the 2045 mean-reversion
+forecast.
 
 Run with:  streamlit run app/dashboard.py
 
@@ -42,6 +43,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.regions import add_region_column, REGIONS  # noqa: E402
 
 DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+FIGURES_DIR = Path(__file__).resolve().parents[1] / "figures"
 
 st.set_page_config(
     page_title="R&D Space Market Structural Gap",
@@ -103,6 +105,16 @@ def describe_gap(pct: float, subject: str = "metros") -> str:
     )
 
 
+# Case-study markets with a pre-built multi-panel dashboard figure.
+# Not every profiled MSA has one — the dashboard degrades gracefully
+# for the rest, showing the data table without an image.
+CASE_STUDY_IMAGES = {
+    "Seattle-Tacoma-Bellevue, WA": "casestudy_dashboard_Seattle_Tacoma_Bellevue_WA.png",
+    "Houston-Pasadena-The Woodlands, TX": "casestudy_dashboard_Houston_Pasadena_The_Woodlands_TX.png",
+    "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD": "casestudy_dashboard_Philadelphia_Camden_Wilmington_PA_NJ_DE_MD.png",
+}
+
+
 # ── Header / intro ──────────────────────────────────────────────────
 st.title("R&D Space Market Structural Gap")
 st.markdown(
@@ -123,8 +135,12 @@ st.caption(
     "Full methodology: `docs/methodology.md` in the repo."
 )
 
-tab_overview, tab_msa, tab_regional, tab_forecast = st.tabs(
-    ["National Overview", "By MSA", "Regional", "2045 Forecast"]
+(
+    tab_overview, tab_msa, tab_regional, tab_validation,
+    tab_casestudies, tab_forecast,
+) = st.tabs(
+    ["National Overview", "By MSA", "Regional", "Model Validation",
+     "Case Studies", "2045 Forecast"]
 )
 
 GAP_HELP = (
@@ -266,6 +282,148 @@ with tab_regional:
                 )
         else:
             st.warning("`Structural_Gap` column not found in results export.")
+
+    st.divider()
+    st.subheader("Top surplus and deficit markets by region")
+    st.markdown(
+        "The five biggest surpluses and five biggest deficits within "
+        "each Census region, weighted by R&D-relevant employment "
+        "concentration — so a large gap in a metro with little R&D "
+        "activity counts less than the same-sized gap in an R&D hub."
+    )
+    top5 = load_csv("Regional_Top5_RDWeighted_v14b.csv")
+    if top5 is None:
+        missing_data_notice("Regional_Top5_RDWeighted_v14b.csv")
+    else:
+        region_pick = st.selectbox("Select a region", REGIONS, key="top5_region")
+        region_df = top5[top5["Region"] == region_pick]
+        gap_col = find_col(region_df, ["R&D_Weighted_Gap_SF", "Gap"])
+        st.dataframe(
+            region_df[["MSA_Name", gap_col, "Rank_Type"]] if gap_col else region_df,
+            use_container_width=True, hide_index=True,
+        )
+
+    st.divider()
+    st.subheader("Small-base, fast-growing R&D markets")
+    st.markdown(
+        "Metros with a small R&D real estate base as of 2015–2018 but "
+        "the fastest subsequent growth — markets that may be emerging "
+        "R&D hubs rather than established ones."
+    )
+    smallbase = load_csv("Top20_SmallBase_Growth_LQTrend_v14b.csv")
+    if smallbase is None:
+        missing_data_notice("Top20_SmallBase_Growth_LQTrend_v14b.csv")
+    else:
+        cagr_col = find_col(smallbase, ["CAGR"])
+        show_cols = [c for c in ["MSA_Name", cagr_col, "Rising_Concentration", "Nascent_Candidate"] if c]
+        st.dataframe(smallbase[show_cols], use_container_width=True, hide_index=True)
+
+# ── Model validation ──────────────────────────────────────────────────
+with tab_validation:
+    st.markdown(
+        "Why trust this specific model? This tab shows two things: "
+        "which features actually drive its predictions, and how it "
+        "performed against six alternative modeling approaches on "
+        "identical data."
+    )
+
+    st.subheader("What drives the model's predictions")
+    shap_df = load_csv("AvailSFTotal_SHAP_importance.csv")
+    if shap_df is None:
+        missing_data_notice("AvailSFTotal_SHAP_importance.csv")
+    else:
+        feat_col = find_col(shap_df, ["Feature"])
+        shap_col = find_col(shap_df, ["Mean_SHAP"])
+        if feat_col and shap_col:
+            top_shap = shap_df.nlargest(15, shap_col).sort_values(shap_col)
+            fig = px.bar(
+                top_shap, x=shap_col, y=feat_col, orientation="h",
+                title="Top 15 Features by SHAP Importance",
+                labels={shap_col: "Mean |SHAP value|", feat_col: ""},
+            )
+            st.plotly_chart(fig, use_container_width=True)
+            top_feature = shap_df.nlargest(1, shap_col).iloc[0][feat_col]
+            st.markdown(
+                f"**Takeaway:** {top_feature} is the single strongest "
+                f"predictor of available R&D space in this model — "
+                f"features are ranked by how much they actually move "
+                f"individual predictions, not just correlation with the "
+                f"outcome."
+            )
+
+    st.divider()
+    st.subheader("Why LightGBM, not something else")
+    model_comp = load_csv("Model_Comparison_v14b.csv")
+    if model_comp is None:
+        missing_data_notice("Model_Comparison_v14b.csv")
+    else:
+        loocv_col = find_col(model_comp, ["LOOCV_R2"])
+        model_col = find_col(model_comp, ["Model"])
+        if loocv_col and model_col:
+            display_df = model_comp.sort_values(loocv_col, ascending=False)
+            st.dataframe(display_df, use_container_width=True, hide_index=True)
+            best_model = display_df.iloc[0][model_col]
+            best_score = display_df.iloc[0][loocv_col]
+            st.markdown(
+                f"**Takeaway:** {best_model} achieved the highest "
+                f"leave-one-out cross-validated R² ({best_score:.3f}) "
+                f"among the seven approaches tested, on identical "
+                f"features and evaluation protocol — the model choice "
+                f"is empirically justified, not just a default pick."
+            )
+        else:
+            st.dataframe(model_comp, use_container_width=True, hide_index=True)
+
+# ── Case studies ─────────────────────────────────────────────────────
+with tab_casestudies:
+    st.markdown(
+        "Eight named metros were profiled in depth. Pick one to see its "
+        "category, ranking, R&D-employment concentration trend, and "
+        "equilibrium status side by side."
+    )
+    profiles = load_csv("Market_CaseStudies_Combined_Profile.csv")
+    if profiles is None:
+        missing_data_notice("Market_CaseStudies_Combined_Profile.csv")
+    else:
+        msa_col = find_col(profiles, ["MSA_Name"])
+        msa_pick = st.selectbox(
+            "Select a case-study MSA", sorted(profiles[msa_col].unique()), key="casestudy_msa"
+        )
+        row = profiles[profiles[msa_col] == msa_pick].iloc[0]
+
+        cat_col = find_col(profiles, ["Typical_Market_Category"])
+        rank_col = find_col(profiles, ["Rank_RDWeighted"])
+        gap_col = find_col(profiles, ["Mean_Gap_RDWeighted_2020_2023"])
+        conv_col = find_col(profiles, ["Already_Converged_2023"])
+
+        c1, c2, c3 = st.columns(3)
+        if cat_col:
+            c1.metric("Market category", row[cat_col])
+        if gap_col:
+            c2.metric("Mean R&D-weighted gap, 2020–2023", f"{to_pct(pd.Series([row[gap_col]])).iloc[0]:+.1f}%")
+        if rank_col:
+            c3.metric("Rank (R&D-weighted)", f"#{int(row[rank_col])} of 100")
+
+        if msa_pick in CASE_STUDY_IMAGES:
+            img_path = FIGURES_DIR / CASE_STUDY_IMAGES[msa_pick]
+            if img_path.exists():
+                st.image(str(img_path), use_container_width=True)
+            else:
+                st.info(f"Figure not found at `figures/{CASE_STUDY_IMAGES[msa_pick]}`.")
+        else:
+            st.caption(
+                "No pre-built multi-panel figure for this MSA — showing "
+                "profile data only."
+            )
+
+        st.dataframe(profiles[profiles[msa_col] == msa_pick], use_container_width=True, hide_index=True)
+
+        if conv_col is not None:
+            status = "already at" if bool(row[conv_col]) else "still converging toward"
+            st.markdown(
+                f"**Takeaway:** {msa_pick} is {status} its own long-run "
+                f"equilibrium as of 2023."
+            )
 
 # ── Forecast ───────────────────────────────────────────────────────────
 with tab_forecast:
