@@ -15,6 +15,7 @@ source file isn't present yet, rather than crashing the whole app.
 import sys
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import plotly.express as px
 import streamlit as st
@@ -80,10 +81,11 @@ with tab_overview:
         col1, col2, col3 = st.columns(3)
         recent = results[results["Year"] == results["Year"].max()]
         col1.metric("MSAs in panel", results["MSA_Name"].nunique())
-        col2.metric(
-            "Mean structural gap (latest year)",
-            f"{recent['Structural_Gap'].mean():,.0f} SF" if "Structural_Gap" in recent else "—",
-        )
+        if "Structural_Gap" in recent:
+            gap_pct = (np.exp(recent["Structural_Gap"]) - 1).mean() * 100
+            col2.metric("Mean structural gap (latest year)", f"{gap_pct:+.1f}%")
+        else:
+            col2.metric("Mean structural gap (latest year)", "—")
         col3.metric("Years covered", f"{results['Year'].min()}–{results['Year'].max()}")
 
 # ── By-MSA detail ─────────────────────────────────────────────────────
@@ -102,6 +104,11 @@ with tab_msa:
         )
         st.plotly_chart(fig, use_container_width=True)
         if "Structural_Gap" in msa_df:
+            st.caption(
+                "Structural_Gap is in log-space (the model predicts "
+                "log available space): positive = actual space exceeds "
+                "the counterfactual (surplus), negative = deficit."
+            )
             st.dataframe(
                 msa_df[["Year", "Structural_Gap", "Market_Category"]]
                 if "Market_Category" in msa_df
@@ -130,7 +137,7 @@ with tab_regional:
                 y="Structural_Gap",
                 color="Region",
                 category_orders={"Region": REGIONS},
-                title="Mean Structural Gap by Census Region",
+                title="Mean Structural Gap by Census Region (log-space)",
             )
             st.plotly_chart(fig, use_container_width=True)
         else:
