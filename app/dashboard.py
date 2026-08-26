@@ -3,7 +3,7 @@ R&D Space Market Structural Gap — Interactive Dashboard
 =========================================================
 Streamlit app for exploring the COVID-19 structural-gap counterfactual
 model's results: national trends, by-MSA detail, regional comparisons,
-model validation, named case studies, and the 2045 mean-reversion
+SHAP feature importance, named case studies, and the 2045 mean-reversion
 forecast.
 
 Run with:  streamlit run app/dashboard.py
@@ -13,21 +13,25 @@ first). Each section degrades gracefully with a clear message if its
 source file isn't present yet, rather than crashing the whole app.
 
 UNITS NOTE: the underlying model predicts log(Available_SF_Total), so
-Structural_Gap (and Deviation0) in the source CSVs are log-space values.
-Everywhere this app displays these to a person, it converts them to a
-percentage via (exp(x) - 1) * 100 for readability.
+Structural_Gap (and Deviation0) in the source CSVs are log-space values,
+converted to a percentage via (exp(x) - 1) * 100 for readability. The
+R&D-weighted gap figures used for regional ranking and case-study
+summaries (Mean_Gap_RDWeighted_*, R&D_Weighted_Gap_SF) are a DIFFERENT
+metric — raw square footage, not log-space — and are never run through
+that percentage conversion. Where a percentage view of a ranked MSA is
+useful, this app looks up that MSA's own Structural_Gap_% from the main
+results file instead of converting the SF figure.
 
 EQUILIBRIUM NOTE: the mean-reversion forecast does not project the gap
 back to 0%. Each MSA reverts toward its OWN long-run equilibrium target
 (Residual_Equilibrium + Bias_2023 in the source data), which is usually
 NOT zero. The national number is the R&D-weighted average of all 100
-of those individual targets. This dashboard computes and displays the
-real target explicitly, rather than assuming it's zero.
+of those individual targets.
 
 NARRATIVE NOTE: every chart is followed by a plain-English "Takeaway"
-sentence computed live from the actual data, not hardcoded. Bold text
-is reserved for section-opening labels only (e.g. "Takeaway:") — never
-for inline emphasis within sentences, to keep formatting consistent.
+sentence computed live from the actual data. Bold text is reserved for
+section-opening labels only (e.g. "Takeaway:") — never for inline
+emphasis within sentences.
 """
 
 import sys
@@ -71,6 +75,11 @@ def to_pct(series: pd.Series) -> pd.Series:
     return (np.exp(series) - 1) * 100
 
 
+def fmt_sf(x: float) -> str:
+    """Format a raw square-footage figure with a sign and thousands separators."""
+    return f"{x:+,.0f} SF"
+
+
 def find_col(df: pd.DataFrame, candidates: list[str]) -> str | None:
     """Find a column matching one of the candidate names, case-insensitively,
     falling back to a substring match. Returns None if nothing matches."""
@@ -105,9 +114,14 @@ def describe_gap(pct: float, subject: str = "metros") -> str:
     )
 
 
-# Case-study markets with a pre-built multi-panel dashboard figure.
-# Not every profiled MSA has one — the dashboard degrades gracefully
-# for the rest, showing the data table without an image.
+def latest_pct_lookup(results_df: pd.DataFrame) -> pd.Series | None:
+    """Series of each MSA's latest-year Structural_Gap_%, indexed by MSA_Name."""
+    if results_df is None or "Structural_Gap" not in results_df:
+        return None
+    recent = results_df[results_df["Year"] == results_df["Year"].max()]
+    return to_pct(recent.set_index("MSA_Name")["Structural_Gap"])
+
+
 CASE_STUDY_IMAGES = {
     "Seattle-Tacoma-Bellevue, WA": "casestudy_dashboard_Seattle_Tacoma_Bellevue_WA.png",
     "Houston-Pasadena-The Woodlands, TX": "casestudy_dashboard_Houston_Pasadena_The_Woodlands_TX.png",
@@ -136,10 +150,10 @@ st.caption(
 )
 
 (
-    tab_overview, tab_msa, tab_regional, tab_validation,
+    tab_overview, tab_msa, tab_regional, tab_shap,
     tab_casestudies, tab_forecast,
 ) = st.tabs(
-    ["National Overview", "By MSA", "Regional", "Model Validation",
+    ["National Overview", "By MSA", "Regional", "SHAP Feature Importance",
      "Case Studies", "2045 Forecast"]
 )
 
@@ -287,47 +301,69 @@ with tab_regional:
     st.subheader("Top surplus and deficit markets by region")
     st.markdown(
         "The five biggest surpluses and five biggest deficits within "
-        "each Census region, weighted by R&D-relevant employment "
-        "concentration — so a large gap in a metro with little R&D "
-        "activity counts less than the same-sized gap in an R&D hub."
+        "each Census region. Ranking is based on the R&D-weighted gap "
+        "in square feet (a large gap in a metro with little R&D activity "
+        "counts less than the same-sized gap in an R&D hub) — the figure "
+        "shown below is each MSA's overall structural gap percentage, "
+        "for consistency with the rest of this dashboard."
     )
     top5 = load_csv("Regional_Top5_RDWeighted_v14b.csv")
     if top5 is None:
         missing_data_notice("Regional_Top5_RDWeighted_v14b.csv")
     else:
+        pct_lookup = latest_pct_lookup(results)
         region_pick = st.selectbox("Select a region", REGIONS, key="top5_region")
-        region_df = top5[top5["Region"] == region_pick]
-        gap_col = find_col(region_df, ["R&D_Weighted_Gap_SF", "Gap"])
-        st.dataframe(
-            region_df[["MSA_Name", gap_col, "Rank_Type"]] if gap_col else region_df,
-            use_container_width=True, hide_index=True,
-        )
+        region_df = top5[top5["Region"] == region_pick].copy()
+        if pct_lookup is not None:
+            region_df["Structural_Gap_%"] = region_df["MSA_Name"].map(pct_lookup).round(1)
+            st.dataframe(
+                region_df[["MSA_Name", "Structural_Gap_%", "Rank_Type"]],
+                use_container_width=True, hide_index=True,
+            )
+        else:
+            st.dataframe(region_df, use_container_width=True, hide_index=True)
 
     st.divider()
     st.subheader("Small-base, fast-growing R&D markets")
-    st.markdown(
-        "Metros with a small R&D real estate base as of 2015–2018 but "
-        "the fastest subsequent growth — markets that may be emerging "
-        "R&D hubs rather than established ones."
-    )
     smallbase = load_csv("Top20_SmallBase_Growth_LQTrend_v14b.csv")
     if smallbase is None:
         missing_data_notice("Top20_SmallBase_Growth_LQTrend_v14b.csv")
     else:
         cagr_col = find_col(smallbase, ["CAGR"])
-        show_cols = [c for c in ["MSA_Name", cagr_col, "Rising_Concentration", "Nascent_Candidate"] if c]
-        st.dataframe(smallbase[show_cols], use_container_width=True, hide_index=True)
+        slope_col = find_col(smallbase, ["LQ_Slope"])
+        rising_col = find_col(smallbase, ["Rising_Concentration"])
+        display = smallbase.copy()
+        if cagr_col:
+            display["CAGR (%)"] = (display[cagr_col] * 100).round(1)
+        if slope_col and rising_col:
+            display["LQ Trend"] = display.apply(
+                lambda r: f"{'Rising' if r[rising_col] else 'Declining'} ({r[slope_col]:+.4f}/yr)",
+                axis=1,
+            )
+        show_cols = [c for c in ["MSA_Name", "CAGR (%)", "LQ Trend"] if c in display.columns]
+        st.dataframe(display[show_cols], use_container_width=True, hide_index=True)
+        st.markdown(
+            "**CAGR** is the compound annual growth rate of available R&D "
+            "space for that metro — negative values mean available space "
+            "has been shrinking over time, consistent with rapid demand "
+            "absorption in a small, emerging market. **LQ Trend** tracks "
+            "the metro's advanced-industry employment location quotient "
+            "(a measure of how concentrated R&D-relevant employment is "
+            "there relative to the nation): rising means that "
+            "concentration is increasing year over year, declining means "
+            "it's easing."
+        )
 
-# ── Model validation ──────────────────────────────────────────────────
-with tab_validation:
+# ── SHAP feature importance ─────────────────────────────────────────────
+with tab_shap:
     st.markdown(
-        "Why trust this specific model? This tab shows two things: "
-        "which features actually drive its predictions, and how it "
-        "performed against six alternative modeling approaches on "
-        "identical data."
+        "SHAP (SHapley Additive exPlanations) values quantify how much "
+        "each feature actually pushes the model's individual predictions "
+        "up or down, rather than just measuring correlation with the "
+        "outcome."
     )
 
-    st.subheader("What drives the model's predictions")
+    st.subheader("Global importance")
     shap_df = load_csv("AvailSFTotal_SHAP_importance.csv")
     if shap_df is None:
         missing_data_notice("AvailSFTotal_SHAP_importance.csv")
@@ -344,35 +380,33 @@ with tab_validation:
             st.plotly_chart(fig, use_container_width=True)
             top_feature = shap_df.nlargest(1, shap_col).iloc[0][feat_col]
             st.markdown(
-                f"**Takeaway:** {top_feature} is the single strongest "
-                f"predictor of available R&D space in this model — "
-                f"features are ranked by how much they actually move "
-                f"individual predictions, not just correlation with the "
-                f"outcome."
+                f"This ranks features by their average impact across all "
+                f"predictions — {top_feature} moves the model's output "
+                f"more, on average, than any other feature. A longer bar "
+                f"means that feature matters more to the model overall, "
+                f"but says nothing about direction (whether it pushes "
+                f"predictions up or down) or about any single prediction "
+                f"specifically — that's what the beeswarm plot below adds."
             )
 
     st.divider()
-    st.subheader("Why LightGBM, not something else")
-    model_comp = load_csv("Model_Comparison_v14b.csv")
-    if model_comp is None:
-        missing_data_notice("Model_Comparison_v14b.csv")
+    st.subheader("Per-observation detail")
+    beeswarm_path = FIGURES_DIR / "lag_counterfactual_shap_beeswarm_v14b.png"
+    if beeswarm_path.exists():
+        st.image(str(beeswarm_path), use_container_width=True)
+        st.markdown(
+            "Each dot is one MSA-year observation. A feature's row shows "
+            "every observation's individual SHAP value, not just the "
+            "average — so you can see both how much a feature matters "
+            "and in which direction, and whether that effect is "
+            "consistent across observations or varies a lot (e.g. "
+            "helping some metros' predictions while hurting others')."
+        )
     else:
-        loocv_col = find_col(model_comp, ["LOOCV_R2"])
-        model_col = find_col(model_comp, ["Model"])
-        if loocv_col and model_col:
-            display_df = model_comp.sort_values(loocv_col, ascending=False)
-            st.dataframe(display_df, use_container_width=True, hide_index=True)
-            best_model = display_df.iloc[0][model_col]
-            best_score = display_df.iloc[0][loocv_col]
-            st.markdown(
-                f"**Takeaway:** {best_model} achieved the highest "
-                f"leave-one-out cross-validated R² ({best_score:.3f}) "
-                f"among the seven approaches tested, on identical "
-                f"features and evaluation protocol — the model choice "
-                f"is empirically justified, not just a default pick."
-            )
-        else:
-            st.dataframe(model_comp, use_container_width=True, hide_index=True)
+        st.info(
+            "`lag_counterfactual_shap_beeswarm_v14b.png` not found in "
+            "`figures/`."
+        )
 
 # ── Case studies ─────────────────────────────────────────────────────
 with tab_casestudies:
@@ -382,6 +416,7 @@ with tab_casestudies:
         "equilibrium status side by side."
     )
     profiles = load_csv("Market_CaseStudies_Combined_Profile.csv")
+    results_hist = load_csv("AvailSFTotal_Counterfactual_Results.csv")
     if profiles is None:
         missing_data_notice("Market_CaseStudies_Combined_Profile.csv")
     else:
@@ -393,16 +428,25 @@ with tab_casestudies:
 
         cat_col = find_col(profiles, ["Typical_Market_Category"])
         rank_col = find_col(profiles, ["Rank_RDWeighted"])
-        gap_col = find_col(profiles, ["Mean_Gap_RDWeighted_2020_2023"])
+        gap_sf_col = find_col(profiles, ["Mean_Gap_RDWeighted_2020_2023"])
         conv_col = find_col(profiles, ["Already_Converged_2023"])
+
+        pct_lookup = latest_pct_lookup(results_hist)
 
         c1, c2, c3 = st.columns(3)
         if cat_col:
             c1.metric("Market category", row[cat_col])
-        if gap_col:
-            c2.metric("Mean R&D-weighted gap, 2020–2023", f"{to_pct(pd.Series([row[gap_col]])).iloc[0]:+.1f}%")
+        if pct_lookup is not None and msa_pick in pct_lookup.index:
+            c2.metric("Structural gap (latest year)", f"{pct_lookup[msa_pick]:+.1f}%")
         if rank_col:
             c3.metric("Rank (R&D-weighted)", f"#{int(row[rank_col])} of 100")
+
+        if gap_sf_col:
+            st.caption(
+                f"R&D-weighted mean gap, 2020–2023 (raw square footage, "
+                f"a different metric from the percentage above): "
+                f"{fmt_sf(row[gap_sf_col])}"
+            )
 
         if msa_pick in CASE_STUDY_IMAGES:
             img_path = FIGURES_DIR / CASE_STUDY_IMAGES[msa_pick]
@@ -415,8 +459,6 @@ with tab_casestudies:
                 "No pre-built multi-panel figure for this MSA — showing "
                 "profile data only."
             )
-
-        st.dataframe(profiles[profiles[msa_col] == msa_pick], use_container_width=True, hide_index=True)
 
         if conv_col is not None:
             status = "already at" if bool(row[conv_col]) else "still converging toward"
