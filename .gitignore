@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# Data — CoStar-sourced data is licensed and must not be committed.
+# Public sources (BEA, NSF HERD, Census/BDS) may be added back deliberately.
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# Generated CSV/output artifacts from notebook runs
+*.csv
+!data/**/*.csv
+!tests/fixtures/*.csv
+
+# Figures generated at runtime (committed figures live in figures/, tracked deliberately)
+*.png
+!figures/*.png
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
