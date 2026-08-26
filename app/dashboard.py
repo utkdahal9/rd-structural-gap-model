@@ -36,6 +36,14 @@ zero. This dashboard always uses the model's own category label rather
 than recomputing a different one, and explains the real thresholds
 explicitly wherever the category is shown.
 
+EQUILIBRIUM TARGET NOTE: each MSA's long-run forecast target is not an
+economic ideal — it's the model's own historical LOOCV prediction
+miss for that specific metro during the pre-COVID anchor period
+(2015-2018), after removing the portion explained by market size. It
+differs by MSA because the national model doesn't fit every metro's
+idiosyncratic dynamics equally well, not because some metros "deserve"
+more space than others.
+
 NARRATIVE NOTE: every chart is followed by a plain-English "Takeaway"
 sentence computed live from the actual data. Bold text is reserved for
 section-opening labels only (e.g. "Takeaway:") — never for inline
@@ -157,6 +165,26 @@ def category_explainer_text() -> str:
         f"This is a separate system from the \"Highest/Lowest in Region\" "
         f"ranking shown elsewhere, which is based on absolute square "
         f"footage, not this statistical classification."
+    )
+
+
+def equilibrium_explainer_text() -> str:
+    return (
+        "This target isn't an economic ideal, and it isn't what the "
+        "model considers \"correct\" for this metro. It's a direct "
+        "measurement of how much this MSA's actual available space "
+        "typically differed from the model's own predictions during "
+        "normal, pre-COVID years (2015–2018) — after removing the "
+        "part of that difference explained by market size alone.\n\n"
+        "No national model fits every individual metro perfectly. Some "
+        "markets' real estate dynamics (submarket structure, tenant "
+        "mix, industry composition, and other local factors) aren't "
+        "fully captured by the features available nationally. That "
+        "leftover, metro-specific mismatch — present even before COVID "
+        "— becomes this MSA's long-run target. A larger target means "
+        "the model's historical fit was looser for that particular "
+        "metro, not that the metro is somehow more \"deserving\" of "
+        "surplus space."
     )
 
 
@@ -639,6 +667,10 @@ with tab_forecast:
             )
             st.plotly_chart(fig, use_container_width=True)
 
+            if national_target_pct is not None:
+                with st.expander("Why isn't this target 0%, and why does it differ by MSA?"):
+                    st.markdown(equilibrium_explainer_text())
+
             canonical_year = None
             if lam_fc is not None:
                 is_mean_col = find_col(lam_fc, ["Is_Assumed_Mean"])
@@ -751,6 +783,9 @@ with tab_forecast:
                 xaxis_title="Year",
             )
             st.plotly_chart(fig, use_container_width=True)
+
+            with st.expander("Why isn't this target 0%, and why does it differ by MSA?"):
+                st.markdown(equilibrium_explainer_text())
 
             already_converged = bool(row[converged_col]) if converged_col else None
             dev0_pct = to_pct(pd.Series([dev0])).iloc[0]
