@@ -16,10 +16,10 @@ Structural_Gap in the source CSVs is a log-space value. Everywhere this
 app displays that number to a person, it converts it to a percentage
 via (exp(x) - 1) * 100 for readability.
 
-NARRATIVE NOTE: every chart is followed by a plain-English "takeaway"
-sentence computed live from the actual data, not hardcoded, so a
-non-technical reader (e.g. a hiring manager) gets the "so what" without
-needing to interpret the numbers themselves.
+NARRATIVE NOTE: every chart is followed by a plain-English "Takeaway"
+sentence computed live from the actual data, not hardcoded. Bold text
+is reserved for section-opening labels only (e.g. "Takeaway:") — never
+for inline emphasis within sentences, to keep formatting consistent.
 """
 
 import sys
@@ -76,21 +76,22 @@ def find_col(df: pd.DataFrame, candidates: list[str]) -> str | None:
 
 
 def describe_gap(pct: float, subject: str = "metros") -> str:
-    """Plain-English description of a structural gap percentage."""
+    """Plain-English description of a structural gap percentage. No inline
+    bold — bold is reserved for section labels like 'Takeaway:'."""
     if pct > 5:
         return (
-            f"That's a **surplus**: on average, {subject} currently have "
+            f"That is a surplus: on average, {subject} currently have "
             f"{pct:+.1f}% more available R&D space than the pre-COVID "
             f"trend would have predicted."
         )
     elif pct < -5:
         return (
-            f"That's a **deficit**: on average, {subject} currently have "
+            f"That is a deficit: on average, {subject} currently have "
             f"{pct:+.1f}% less available R&D space than the pre-COVID "
-            f"trend would have predicted — i.e. tighter supply than expected."
+            f"trend would have predicted, i.e. tighter supply than expected."
         )
     return (
-        f"That's roughly **balanced** — the {pct:+.1f}% average gap is "
+        f"That is roughly balanced — the {pct:+.1f}% average gap is "
         f"close to what the pre-COVID trend predicted for {subject}."
     )
 
@@ -101,14 +102,14 @@ st.markdown(
     "**The question this project answers:** did COVID-19 permanently "
     "change how much R&D-oriented industrial space (labs, flex space, "
     "advanced-manufacturing buildings) is available across major U.S. "
-    "metro areas — or did markets simply return to their pre-pandemic "
+    "metro areas, or did markets simply return to their pre-pandemic "
     "trajectory?\n\n"
     "**How:** a machine-learning model was trained only on data from "
     "before COVID (2006–2019) and used to predict what 2020–2023 "
-    "*should* have looked like if the pandemic never happened. The gap "
+    "should have looked like if the pandemic never happened. The gap "
     "between that prediction and what actually happened is the "
-    "**structural gap** — the pandemic's lasting footprint on this "
-    "real estate market, isolated from the normal ups and downs."
+    "structural gap — the pandemic's lasting footprint on this real "
+    "estate market, isolated from the normal ups and downs."
 )
 st.caption(
     "Counterfactual analysis across 100 U.S. metro areas, 2005–2023. "
@@ -129,9 +130,9 @@ GAP_HELP = (
 # ── National overview ────────────────────────────────────────────────
 with tab_overview:
     st.markdown(
-        "This tab shows the **national picture**: how much available "
-        "space actually existed each year (blue/red line below) versus "
-        "what the model expected without COVID (the counterfactual line)."
+        "This tab shows the national picture: how much available space "
+        "actually existed each year versus what the model expected "
+        "without COVID (the counterfactual)."
     )
     results = load_csv("AvailSFTotal_Counterfactual_Results.csv")
     if results is None:
@@ -171,21 +172,20 @@ with tab_overview:
 
         if gap_pct is not None:
             st.markdown(
-                f"**Takeaway:** as of {latest_year}, the pre-pandemic trend "
-                f"before the shading above should never have crossed — but it "
-                f"did. {describe_gap(gap_pct)} The lines above diverging inside "
-                f"the shaded COVID period, and staying apart afterward, is the "
-                f"visual signature of a *structural* (lasting) change rather "
-                f"than a temporary blip."
+                f"**Takeaway:** as of {latest_year}, the actual and "
+                f"counterfactual lines above diverge inside the shaded "
+                f"COVID period and stay apart afterward — the visual "
+                f"signature of a lasting change rather than a temporary "
+                f"blip. {describe_gap(gap_pct)}"
             )
 
 # ── By-MSA detail ─────────────────────────────────────────────────────
 with tab_msa:
     st.markdown(
         "Pick any individual metro to see its own actual-vs-counterfactual "
-        "path and year-by-year gap — useful for spot-checking whether the "
-        "national pattern above holds locally, or whether a specific metro "
-        "is an outlier."
+        "path and year-by-year gap, useful for spot-checking whether the "
+        "national pattern holds locally or whether a specific metro is an "
+        "outlier."
     )
     results = load_csv("AvailSFTotal_Counterfactual_Results.csv")
     if results is None:
@@ -214,9 +214,9 @@ with tab_msa:
 # ── Regional comparison ────────────────────────────────────────────────
 with tab_regional:
     st.markdown(
-        "Same structural gap measure, grouped by U.S. Census region — "
-        "shows whether the pandemic's impact on R&D real estate landed "
-        "evenly across the country, or concentrated in specific areas."
+        "Same structural gap measure, grouped by U.S. Census region, "
+        "showing whether the pandemic's impact on R&D real estate landed "
+        "evenly across the country or concentrated in specific areas."
     )
     results = load_csv("AvailSFTotal_Counterfactual_Results.csv")
     if results is None:
@@ -248,14 +248,14 @@ with tab_regional:
             if not latest_by_region.empty:
                 highest_region = latest_by_region.idxmax()
                 lowest_region = latest_by_region.idxmin()
+                spread = latest_by_region[highest_region] - latest_by_region[lowest_region]
                 st.markdown(
-                    f"**Takeaway:** as of {int(latest_year)}, **{highest_region}** "
+                    f"**Takeaway:** as of {int(latest_year)}, {highest_region} "
                     f"shows the largest gap ({latest_by_region[highest_region]:+.1f}%), "
-                    f"while **{lowest_region}** shows the smallest "
-                    f"({latest_by_region[lowest_region]:+.1f}%) — a "
-                    f"{latest_by_region[highest_region] - latest_by_region[lowest_region]:.1f} "
-                    f"point spread suggests the pandemic's structural impact was "
-                    f"regional, not uniform nationwide."
+                    f"while {lowest_region} shows the smallest "
+                    f"({latest_by_region[lowest_region]:+.1f}%). A {spread:.1f} "
+                    f"point spread suggests the pandemic's structural impact "
+                    f"was regional, not uniform nationwide."
                 )
         else:
             st.warning("`Structural_Gap` column not found in results export.")
@@ -263,91 +263,81 @@ with tab_regional:
 # ── Forecast ───────────────────────────────────────────────────────────
 with tab_forecast:
     st.markdown(
-        "This isn't a prediction of *how many square feet will exist in "
-        "2045*. It models **how fast each MSA's current deviation from "
-        "its own pre-COVID equilibrium closes** — the trajectory back "
-        "toward normal, not a single future snapshot. Think of it like "
-        "a thermostat: the market overshot its old equilibrium, and this "
-        "traces how quickly it's expected to settle back."
+        "This isn't a prediction of how many square feet will exist in "
+        "2045. It models how fast each MSA's current deviation from its "
+        "own pre-COVID equilibrium closes, the trajectory back toward "
+        "normal, not a single future snapshot."
     )
 
     national_fc = load_csv("MeanReversion_RDWeighted_National_2015_2045_v14b.csv")
     if national_fc is None:
         missing_data_notice("MeanReversion_RDWeighted_National_2015_2045_v14b.csv")
     else:
+        actual_col = find_col(national_fc, ["RDWeighted_Mean_Gap"])
+        median_col = find_col(national_fc, ["RDWeighted_Mean_Gap_p50", "p50"])
+        lower_col = find_col(national_fc, ["RDWeighted_Mean_Gap_p05", "p05"])
+        upper_col = find_col(national_fc, ["RDWeighted_Mean_Gap_p95", "p95"])
         year_col = find_col(national_fc, ["Year"])
-        gap_col = find_col(
-            national_fc,
-            ["Deviation_Median", "Median_Deviation", "Deviation", "Gap",
-             "Structural_Gap", "RDWeighted_Deviation", "Projected_Deviation"],
-        )
-        lower_col = find_col(national_fc, ["Lower", "CI_Lower", "P10", "Low"])
-        upper_col = find_col(national_fc, ["Upper", "CI_Upper", "P90", "High"])
 
-        if year_col is None or gap_col is None:
+        if year_col is None or actual_col is None or median_col is None:
             st.warning(
-                "Couldn't automatically identify the year/deviation columns "
-                "in this file — showing the raw table instead."
+                "Couldn't automatically identify the expected columns in "
+                "this file — showing the raw table instead."
             )
             st.dataframe(national_fc, use_container_width=True, hide_index=True)
         else:
-            plot_df = national_fc[[year_col, gap_col]].copy()
-            is_log_space = plot_df[gap_col].abs().max() < 5
-            y_label = "National mean-reversion deviation (%)"
-            if is_log_space:
-                plot_df[gap_col] = to_pct(plot_df[gap_col])
-                if lower_col:
-                    plot_df["_lower"] = to_pct(national_fc[lower_col])
-                if upper_col:
-                    plot_df["_upper"] = to_pct(national_fc[upper_col])
-            else:
-                if lower_col:
-                    plot_df["_lower"] = national_fc[lower_col]
-                if upper_col:
-                    plot_df["_upper"] = national_fc[upper_col]
+            hist = national_fc[national_fc[actual_col].notna()].copy()
+            fc = national_fc[national_fc[median_col].notna()].copy()
+            hist["pct"] = to_pct(hist[actual_col])
+            fc["pct_median"] = to_pct(fc[median_col])
+            if lower_col:
+                fc["pct_lower"] = to_pct(fc[lower_col])
+            if upper_col:
+                fc["pct_upper"] = to_pct(fc[upper_col])
 
             fig = go.Figure()
-            if "_lower" in plot_df and "_upper" in plot_df:
+            if "pct_lower" in fc and "pct_upper" in fc:
                 fig.add_trace(go.Scatter(
-                    x=pd.concat([plot_df[year_col], plot_df[year_col][::-1]]),
-                    y=pd.concat([plot_df["_upper"], plot_df["_lower"][::-1]]),
+                    x=pd.concat([fc[year_col], fc[year_col][::-1]]),
+                    y=pd.concat([fc["pct_upper"], fc["pct_lower"][::-1]]),
                     fill="toself", fillcolor="rgba(31,119,180,0.15)",
                     line=dict(color="rgba(255,255,255,0)"),
-                    name="Uncertainty band", showlegend=True,
+                    name="Uncertainty band",
                 ))
             fig.add_trace(go.Scatter(
-                x=plot_df[year_col], y=plot_df[gap_col],
-                mode="lines", name="Projected deviation",
+                x=hist[year_col], y=hist["pct"],
+                mode="lines", name="Actual (historical)",
                 line=dict(color="#1f77b4", width=2.5),
             ))
-            fig.add_hline(y=0, line_dash="dash", line_color="gray",
-                          annotation_text="Equilibrium (fully normalized)")
+            fig.add_trace(go.Scatter(
+                x=fc[year_col], y=fc["pct_median"],
+                mode="lines", name="Forecast (median)",
+                line=dict(color="#1f77b4", width=2.5, dash="dash"),
+            ))
+            fig.add_hline(y=0, line_dash="dot", line_color="gray",
+                          annotation_text="Equilibrium")
             fig.update_layout(
-                title="National R&D-Weighted Structural Gap — Projected Path to 2045",
-                yaxis_title=y_label,
+                title="National R&D-Weighted Structural Gap — Actual and Projected Path to 2045",
+                yaxis_title="Structural gap (%)",
                 xaxis_title="Year",
             )
             st.plotly_chart(fig, use_container_width=True)
 
-            near_zero = plot_df[plot_df[gap_col].abs() <= 5]
-            start_val = plot_df[gap_col].iloc[0]
-            end_val = plot_df[gap_col].iloc[-1]
-            direction = "shrinking" if abs(end_val) < abs(start_val) else "widening"
-            takeaway = (
-                f"**Takeaway:** the model projects the national gap "
-                f"{direction} from {start_val:+.1f}% toward "
-                f"{end_val:+.1f}% by {int(plot_df[year_col].max())}."
-            )
+            final_year = int(fc[year_col].max())
+            final_pct = fc["pct_median"].iloc[-1]
+            near_zero = fc[fc["pct_median"].abs() <= 5]
             if not near_zero.empty:
                 closure_year = int(near_zero[year_col].min())
-                takeaway += (
-                    f" It's projected to settle within ±5% of equilibrium "
-                    f"(effectively \"normalized\") by **{closure_year}**."
+                takeaway = (
+                    f"**Takeaway:** the market is projected to settle "
+                    f"within ±5% of equilibrium by {closure_year}."
                 )
             else:
-                takeaway += (
-                    " It is not projected to fully close within this "
-                    "forecast window."
+                takeaway = (
+                    f"**Takeaway:** the gap is projected to narrow "
+                    f"substantially but not fully close, settling around "
+                    f"{final_pct:+.1f}% by {final_year} rather than "
+                    f"returning to equilibrium within this forecast window."
                 )
             st.markdown(takeaway)
 
@@ -355,7 +345,10 @@ with tab_forecast:
     msa_fc = load_csv("MeanReversion_RDWeighted_ByMSA_v14b.csv")
     if msa_fc is not None:
         st.subheader("Per-MSA forecast")
-        st.markdown("Same trajectory concept, broken out by individual metro.")
+        st.markdown(
+            "Same trajectory concept, broken out by individual metro — "
+            "select one to see its own projected path to 2045."
+        )
         msa_name_col = find_col(msa_fc, ["MSA_Name", "MSA"])
         if msa_name_col:
             msa_pick = st.selectbox(
@@ -375,6 +368,6 @@ st.markdown(
     "gap figures above are shown as percentage deviation from the "
     "pre-COVID counterfactual trend — see `docs/methodology.md` in the "
     "repo for the full model specification, validation approach "
-    "(MSA-level LOOCV, R² ≈ 0.82), and known limitations. "
-    "Data sources: CoStar, JobsEQ, NSF HERD, BEA, Census ACS/BDS, FHWA."
+    "(MSA-level LOOCV, R² ≈ 0.82), and known limitations. Data sources: "
+    "CoStar, JobsEQ, NSF HERD, BEA, Census ACS/BDS, FHWA."
 )
