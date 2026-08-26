@@ -1,0 +1,41 @@
+Region,MSA_Name,Structural_Gap,Rank_Type
+Northeast,"Allentown-Bethlehem-Easton, PA-NJ",0.6828876145052818,Top 5 Surplus
+Northeast,"Buffalo-Cheektowaga, NY",0.6155250676410722,Top 5 Surplus
+Northeast,"Worcester, MA",0.5496748907129257,Top 5 Surplus
+Northeast,"Harrisburg-Carlisle, PA",0.2622262463814171,Top 5 Surplus
+Northeast,"Scranton--Wilkes-Barre, PA",0.24886069867722813,Top 5 Surplus
+Northeast,"Bridgeport-Stamford-Danbury, CT",-0.4259851597431439,Top 5 Deficit
+Northeast,"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",-0.23569944960363284,Top 5 Deficit
+Northeast,"New York-Newark-Jersey City, NY-NJ",-0.2007431104578279,Top 5 Deficit
+Northeast,"Hartford-West Hartford-East Hartford, CT",-0.1625761105227972,Top 5 Deficit
+Northeast,"Providence-Warwick, RI-MA",-0.10840702953543649,Top 5 Deficit
+Midwest,"Toledo, OH",0.3616863685533187,Top 5 Surplus
+Midwest,"Des Moines-West Des Moines, IA",0.3544968594292204,Top 5 Surplus
+Midwest,"Indianapolis-Carmel-Greenwood, IN",0.26245573159222335,Top 5 Surplus
+Midwest,"Omaha, NE-IA",0.1913367734565061,Top 5 Surplus
+Midwest,"Wichita, KS",0.10187482330547004,Top 5 Surplus
+Midwest,"Cincinnati, OH-KY-IN",-0.21551561002675873,Top 5 Deficit
+Midwest,"Cleveland, OH",-0.1642496133074038,Top 5 Deficit
+Midwest,"Detroit-Warren-Dearborn, MI",-0.15476219274871547,Top 5 Deficit
+Midwest,"Milwaukee-Waukesha, WI",-0.13608774889569905,Top 5 Deficit
+Midwest,"Minneapolis-St. Paul-Bloomington, MN-WI",-0.1271740719330001,Top 5 Deficit
+South,"Lakeland-Winter Haven, FL",0.5307431421023097,Top 5 Surplus
+South,"Charleston-North Charleston, SC",0.5182311148159622,Top 5 Surplus
+South,"Cape Coral-Fort Myers, FL",0.5031925748076014,Top 5 Surplus
+South,"El Paso, TX",0.4778408125076452,Top 5 Surplus
+South,"Memphis, TN-MS-AR",0.46345605355006286,Top 5 Surplus
+South,"Miami-Fort Lauderdale-West Palm Beach, FL",-0.4180918120912116,Top 5 Deficit
+South,"Washington-Arlington-Alexandria, DC-VA-MD-WV",-0.408804372684358,Top 5 Deficit
+South,"Virginia Beach-Chesapeake-Norfolk, VA-NC",-0.36507307631730024,Top 5 Deficit
+South,"Atlanta-Sandy Springs-Roswell, GA",-0.22975856481605028,Top 5 Deficit
+South,"Tampa-St. Petersburg-Clearwater, FL",-0.20269754158630168,Top 5 Deficit
+West,"Stockton-Lodi, CA",0.8156423531868153,Top 5 Surplus
+West,"Bakersfield-Delano, CA",0.5788923034914193,Top 5 Surplus
+West,"Fresno, CA",0.39728096961637016,Top 5 Surplus
+West,"Ogden, UT",0.3646006780699342,Top 5 Surplus
+West,"Boise City, ID",0.338132104029206,Top 5 Surplus
+West,"Sacramento-Roseville-Folsom, CA",-0.13409149234181592,Top 5 Deficit
+West,"Colorado Springs, CO",-0.10672334915859062,Top 5 Deficit
+West,"Albuquerque, NM",-0.0767004789721919,Top 5 Deficit
+West,"Los Angeles-Long Beach-Anaheim, CA",-0.0480523261206054,Top 5 Deficit
+West,"Portland-Vancouver-Hillsboro, OR-WA",0.07278513557456012,Top 5 Deficit

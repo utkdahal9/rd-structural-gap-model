@@ -1,0 +1,101 @@
+MSA_Name,Avg_Gap_2020_2023
+"Stockton-Lodi, CA",0.8156423531868153
+"Allentown-Bethlehem-Easton, PA-NJ",0.6828876145052818
+"Buffalo-Cheektowaga, NY",0.6155250676410722
+"Bakersfield-Delano, CA",0.5788923034914193
+"Worcester, MA",0.5496748907129257
+"Lakeland-Winter Haven, FL",0.5307431421023097
+"Charleston-North Charleston, SC",0.5182311148159622
+"Cape Coral-Fort Myers, FL",0.5031925748076014
+"El Paso, TX",0.4778408125076452
+"Memphis, TN-MS-AR",0.4634560535500629
+"Greenville-Anderson-Greer, SC",0.3985150880801682
+"Fresno, CA",0.39728096961637016
+"Ogden, UT",0.36460067806993424
+"Toledo, OH",0.3616863685533187
+"Des Moines-West Des Moines, IA",0.3544968594292204
+"Oklahoma City, OK",0.34770421433884824
+"Boise City, ID",0.338132104029206
+"Provo-Orem-Lehi, UT",0.338102322524815
+"Seattle-Tacoma-Bellevue, WA",0.3320288642670892
+"Spokane-Spokane Valley, WA",0.29660260416464945
+"Oxnard-Thousand Oaks-Ventura, CA",0.28577517503548355
+"Indianapolis-Carmel-Greenwood, IN",0.26245573159222335
+"Harrisburg-Carlisle, PA",0.2622262463814171
+"Deltona-Daytona Beach-Ormond Beach, FL",0.25349949863636567
+"Scranton--Wilkes-Barre, PA",0.24886069867722815
+"San Jose-Sunnyvale-Santa Clara, CA",0.22972120110608696
+"Kiryas Joel-Poughkeepsie-Newburgh, NY",0.21364568829555886
+"Birmingham, AL",0.19704420479915097
+"San Francisco-Oakland-Fremont, CA",0.19469612845813167
+"San Diego-Chula Vista-Carlsbad, CA",0.19347030430130374
+"Omaha, NE-IA",0.19133677345650613
+"Rochester, NY",0.18922048714977668
+"Nashville-Davidson--Murfreesboro--Franklin, TN",0.1851180481718009
+"Greensboro-High Point, NC",0.17879399188678313
+"Riverside-San Bernardino-Ontario, CA",0.17111035499292537
+"New Haven, CT",0.1689772707156223
+"Dallas-Fort Worth-Arlington, TX",0.1688296329792811
+"Las Vegas-Henderson-North Las Vegas, NV",0.16718459900661964
+"Tulsa, OK",0.15903042898144193
+"Tucson, AZ",0.15606658691674946
+"Denver-Aurora-Centennial, CO",0.15387130276299033
+"Austin-Round Rock-San Marcos, TX",0.15249567973962774
+"Chattanooga, TN-GA",0.14219473304410357
+"Phoenix-Mesa-Chandler, AZ",0.13209567898881946
+"Urban Honolulu, HI",0.11653354996488119
+"Jacksonville, FL",0.11373473431131931
+"Columbia, SC",0.10938370763151717
+"Wichita, KS",0.10187482330547004
+"Akron, OH",0.100815524475375
+"St. Louis, MO-IL",0.08193964745945781
+"Salt Lake City-Murray, UT",0.07815039078758224
+"Portland-Vancouver-Hillsboro, OR-WA",0.07278513557456012
+"Richmond, VA",0.0655951750582684
+"North Port-Bradenton-Sarasota, FL",0.06003544253680637
+"Dayton-Kettering-Beavercreek, OH",0.046199620906907324
+"Raleigh-Cary, NC",0.04152437233484685
+"New Orleans-Metairie, LA",0.0262530194442836
+"Madison, WI",0.02140991401480541
+"Baltimore-Columbia-Towson, MD",0.019416209645933158
+"Houston-Pasadena-The Woodlands, TX",0.015660975396436072
+"Jackson, MS",0.003928575726298789
+"Augusta-Richmond County, GA-SC",-0.0011492730609408142
+"Kansas City, MO-KS",-0.012724871715253272
+"Albany-Schenectady-Troy, NY",-0.015572514253805014
+"Winston-Salem, NC",-0.02176831618623387
+"Columbus, OH",-0.03365804389059068
+"Boston-Cambridge-Newton, MA-NH",-0.035451149563786366
+"McAllen-Edinburg-Mission, TX",-0.04117132916800914
+"Los Angeles-Long Beach-Anaheim, CA",-0.04805232612060539
+"Charlotte-Concord-Gastonia, NC-SC",-0.05149706516196595
+"Grand Rapids-Wyoming-Kentwood, MI",-0.06343541032653865
+"Baton Rouge, LA",-0.06630414588382738
+"Syracuse, NY",-0.07040903551696731
+"Albuquerque, NM",-0.0767004789721919
+"Chicago-Naperville-Elgin, IL-IN",-0.08320233230736296
+"Pittsburgh, PA",-0.08501035703972182
+"Little Rock-North Little Rock-Conway, AR",-0.08554719857211834
+"Colorado Springs, CO",-0.10672334915859061
+"Providence-Warwick, RI-MA",-0.10840702953543646
+"Palm Bay-Melbourne-Titusville, FL",-0.12129340237943165
+"Minneapolis-St. Paul-Bloomington, MN-WI",-0.12717407193300012
+"Orlando-Kissimmee-Sanford, FL",-0.13189677035662406
+"Louisville/Jefferson County, KY-IN",-0.13334990344104192
+"Sacramento-Roseville-Folsom, CA",-0.13409149234181594
+"Milwaukee-Waukesha, WI",-0.13608774889569908
+"Detroit-Warren-Dearborn, MI",-0.1547621927487155
+"Hartford-West Hartford-East Hartford, CT",-0.1625761105227972
+"Cleveland, OH",-0.16424961330740384
+"Durham-Chapel Hill, NC",-0.1891092652118691
+"San Antonio-New Braunfels, TX",-0.19405708397444155
+"New York-Newark-Jersey City, NY-NJ",-0.2007431104578279
+"Knoxville, TN",-0.20242271014739188
+"Tampa-St. Petersburg-Clearwater, FL",-0.2026975415863017
+"Cincinnati, OH-KY-IN",-0.21551561002675879
+"Atlanta-Sandy Springs-Roswell, GA",-0.22975856481605028
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",-0.23569944960363287
+"Virginia Beach-Chesapeake-Norfolk, VA-NC",-0.36507307631730024
+"Washington-Arlington-Alexandria, DC-VA-MD-WV",-0.408804372684358
+"Miami-Fort Lauderdale-West Palm Beach, FL",-0.4180918120912116
+"Bridgeport-Stamford-Danbury, CT",-0.4259851597431439

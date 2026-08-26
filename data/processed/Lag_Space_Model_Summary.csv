@@ -1,0 +1,19 @@
+Metric,Value
+Target,"log_Available_SF_Total (CoStar-reported, direct)"
+Train years,2006-2019
+Predict years,2020-2023
+Train obs,1372
+Predict obs,399
+MSAs,100
+Features,"32 (all lagged 1yr, AR term excluded)"
+R^2 in-sample,0.9813849957009578
+In-sample MAE,0.10254492242482245
+In-sample MdAPE,0.5003378985547209
+2019 holdout R^2,0.9258919299783573
+2019 holdout MAE,0.2049729918598076
+2019 holdout MdAPE,0.8801869143603862
+MSA LOOCV R^2,0.82720829122924
+MSA LOOCV MAE,0.3111180427473504
+MSA LOOCV MdAPE,1.4421528203837903
+Stability std,0.00012587305047219894
+R^2 across seeds,"[0.9811, 0.9814, 0.9811]"

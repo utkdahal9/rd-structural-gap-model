@@ -1,0 +1,10 @@
+Lambda,Years_to_95pct_Closure,Year,Is_Assumed_Mean
+0.1,29,2052,False
+0.15,19,2042,False
+0.2,14,2037,False
+0.25,11,2034,False
+0.3,9,2032,True
+0.35,7,2030,False
+0.4,6,2029,False
+0.5,5,2028,False
+0.6,4,2027,False

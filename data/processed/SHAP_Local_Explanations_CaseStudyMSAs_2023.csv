@@ -1,0 +1,257 @@
+MSA_Name,Feature,SHAP_Value
+"Seattle-Tacoma-Bellevue, WA",log_Adv_Ind_Employees (t-1),0.4176137856672236
+"Seattle-Tacoma-Bellevue, WA",log_Adv_Ind_Establishments (t-1),0.21531348453346325
+"Seattle-Tacoma-Bellevue, WA",log_All_Avg_Wage_Per_Worker (t-1),0.005176905333266572
+"Seattle-Tacoma-Bellevue, WA",log_Adv_Ind_Avg_Annual_Wages_per_Worker (t),-0.009115062022323855
+"Seattle-Tacoma-Bellevue, WA",log_RD_Intensity (t-1),0.011288413343080906
+"Seattle-Tacoma-Bellevue, WA",log_Adv_Ind_Emp_Share (t-1),-0.05853860467644161
+"Seattle-Tacoma-Bellevue, WA",log_Adv_Ind_Wage_Premium (t-1),0.05871216363076266
+"Seattle-Tacoma-Bellevue, WA",Number_of_Universities (t-1),-0.042715914710247806
+"Seattle-Tacoma-Bellevue, WA",Total_R&D_Expenditure_(x1000) (t-1),0.010653893718545512
+"Seattle-Tacoma-Bellevue, WA",Avg_R&D_per_Institution_(x1000) (t-1),-0.01629002538499066
+"Seattle-Tacoma-Bellevue, WA",log_Productivity (t-1),-0.05942178211790607
+"Seattle-Tacoma-Bellevue, WA",log_median_income (t),0.008797449345113737
+"Seattle-Tacoma-Bellevue, WA",log_poverty_count (t-1),0.027538009584571227
+"Seattle-Tacoma-Bellevue, WA",edu_bachelor_plus_pct (t-1),-0.06753511719230985
+"Seattle-Tacoma-Bellevue, WA",CoStar_Vacancy_Rate (t-1),-0.1830935859982388
+"Seattle-Tacoma-Bellevue, WA",log_CoStar_Rent_Overall (t-1),-0.14204568449042318
+"Seattle-Tacoma-Bellevue, WA",CoStar_Rent_Growth_12Mo (t-1),-0.09548203752455678
+"Seattle-Tacoma-Bellevue, WA",CoStar_Cap_Rate (t-1),0.004926772144334698
+"Seattle-Tacoma-Bellevue, WA",CoStar_Market_Cap_Rate (t-1),0.050342729750883476
+"Seattle-Tacoma-Bellevue, WA",log_CoStar_Sales_Transactions (t-1),0.03056639379617501
+"Seattle-Tacoma-Bellevue, WA",LQ_RD_Expenditure (t-1),-0.006483066272720952
+"Seattle-Tacoma-Bellevue, WA",log_Rent_To_AdvInd_Wage (t-1),-0.1560039377557509
+"Seattle-Tacoma-Bellevue, WA",log_Business_Entry_Rate (t-1),-0.03317063982294612
+"Seattle-Tacoma-Bellevue, WA",log_Business_Exit_Rate (t-1),0.0023662074170513166
+"Seattle-Tacoma-Bellevue, WA",Mature_Firm_Share (t-1),-0.006910649774465085
+"Seattle-Tacoma-Bellevue, WA",log_total_vmt_per_capita (t),-0.04680838206768119
+"Seattle-Tacoma-Bellevue, WA",log_patent_count (t),0.04053789003172734
+"Seattle-Tacoma-Bellevue, WA",log_Construction_Starts_SF_12Mo (t-1),0.16686792711327503
+"Seattle-Tacoma-Bellevue, WA",log_Delivery_Intensity (t-1),-0.007743222702247302
+"Seattle-Tacoma-Bellevue, WA",log_Avg_Delivered_Building_Size (t-1),-0.006626405898245526
+"Seattle-Tacoma-Bellevue, WA",Months_of_Supply (t-1),-0.014576673543152107
+"Seattle-Tacoma-Bellevue, WA",Year_FE,-0.06065289277292808
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_Adv_Ind_Employees (t-1),0.5564220561290674
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_Adv_Ind_Establishments (t-1),0.3483287081799655
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_All_Avg_Wage_Per_Worker (t-1),0.007274854324319578
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_Adv_Ind_Avg_Annual_Wages_per_Worker (t),-0.00833727799450464
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_RD_Intensity (t-1),0.011660794709620049
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_Adv_Ind_Emp_Share (t-1),0.01893447147350866
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_Adv_Ind_Wage_Premium (t-1),-0.007367161726823436
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",Number_of_Universities (t-1),0.17899580594898823
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",Total_R&D_Expenditure_(x1000) (t-1),-0.0020795852852433746
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",Avg_R&D_per_Institution_(x1000) (t-1),-0.016632563550750257
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_Productivity (t-1),-0.06760902713622445
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_median_income (t),0.007311740825880418
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_poverty_count (t-1),0.3713273280966203
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",edu_bachelor_plus_pct (t-1),-0.038026822398937316
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",CoStar_Vacancy_Rate (t-1),-0.15583317109781217
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_CoStar_Rent_Overall (t-1),-0.17835362670365082
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",CoStar_Rent_Growth_12Mo (t-1),-0.05705382383263063
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",CoStar_Cap_Rate (t-1),0.0014225288742293653
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",CoStar_Market_Cap_Rate (t-1),0.045081030116357904
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_CoStar_Sales_Transactions (t-1),0.08559111983778603
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",LQ_RD_Expenditure (t-1),-0.09119682155504771
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_Rent_To_AdvInd_Wage (t-1),-0.053932628349912574
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_Business_Entry_Rate (t-1),-0.019780221434008816
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_Business_Exit_Rate (t-1),-0.003865327436912376
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",Mature_Firm_Share (t-1),-0.008365022513630336
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_total_vmt_per_capita (t),-0.00816395445014135
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_patent_count (t),0.012338404736471137
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_Construction_Starts_SF_12Mo (t-1),0.2722201932218365
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_Delivery_Intensity (t-1),-0.007239485915864899
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",log_Avg_Delivered_Building_Size (t-1),-0.001353492367626465
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",Months_of_Supply (t-1),0.01100504068301515
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",Year_FE,-0.053907062656145824
+"Houston-Pasadena-The Woodlands, TX",log_Adv_Ind_Employees (t-1),0.6519999558700215
+"Houston-Pasadena-The Woodlands, TX",log_Adv_Ind_Establishments (t-1),0.3354279667851337
+"Houston-Pasadena-The Woodlands, TX",log_All_Avg_Wage_Per_Worker (t-1),0.004867733462089231
+"Houston-Pasadena-The Woodlands, TX",log_Adv_Ind_Avg_Annual_Wages_per_Worker (t),-0.003034083408601188
+"Houston-Pasadena-The Woodlands, TX",log_RD_Intensity (t-1),-0.024203141617605842
+"Houston-Pasadena-The Woodlands, TX",log_Adv_Ind_Emp_Share (t-1),0.001811009545903604
+"Houston-Pasadena-The Woodlands, TX",log_Adv_Ind_Wage_Premium (t-1),-0.046582130710370026
+"Houston-Pasadena-The Woodlands, TX",Number_of_Universities (t-1),0.16019874182016347
+"Houston-Pasadena-The Woodlands, TX",Total_R&D_Expenditure_(x1000) (t-1),-0.014374037972182101
+"Houston-Pasadena-The Woodlands, TX",Avg_R&D_per_Institution_(x1000) (t-1),-0.014974660457197586
+"Houston-Pasadena-The Woodlands, TX",log_Productivity (t-1),-0.0749685205239018
+"Houston-Pasadena-The Woodlands, TX",log_median_income (t),0.00695296770027262
+"Houston-Pasadena-The Woodlands, TX",log_poverty_count (t-1),0.5110765271895633
+"Houston-Pasadena-The Woodlands, TX",edu_bachelor_plus_pct (t-1),0.005686341566422145
+"Houston-Pasadena-The Woodlands, TX",CoStar_Vacancy_Rate (t-1),-0.10721965822981068
+"Houston-Pasadena-The Woodlands, TX",log_CoStar_Rent_Overall (t-1),-0.1354739642867049
+"Houston-Pasadena-The Woodlands, TX",CoStar_Rent_Growth_12Mo (t-1),-0.053484118961276
+"Houston-Pasadena-The Woodlands, TX",CoStar_Cap_Rate (t-1),0.005885988526971566
+"Houston-Pasadena-The Woodlands, TX",CoStar_Market_Cap_Rate (t-1),0.04517684764519899
+"Houston-Pasadena-The Woodlands, TX",log_CoStar_Sales_Transactions (t-1),0.10722208360999774
+"Houston-Pasadena-The Woodlands, TX",LQ_RD_Expenditure (t-1),-0.05396472697629026
+"Houston-Pasadena-The Woodlands, TX",log_Rent_To_AdvInd_Wage (t-1),0.0848998899281659
+"Houston-Pasadena-The Woodlands, TX",log_Business_Entry_Rate (t-1),-0.0570887704689901
+"Houston-Pasadena-The Woodlands, TX",log_Business_Exit_Rate (t-1),0.004331991259077211
+"Houston-Pasadena-The Woodlands, TX",Mature_Firm_Share (t-1),0.0010799191782639227
+"Houston-Pasadena-The Woodlands, TX",log_total_vmt_per_capita (t),0.010562978179490489
+"Houston-Pasadena-The Woodlands, TX",log_patent_count (t),0.03056627411902016
+"Houston-Pasadena-The Woodlands, TX",log_Construction_Starts_SF_12Mo (t-1),0.2893601537167195
+"Houston-Pasadena-The Woodlands, TX",log_Delivery_Intensity (t-1),-0.056869956440230865
+"Houston-Pasadena-The Woodlands, TX",log_Avg_Delivered_Building_Size (t-1),-0.007392446375985995
+"Houston-Pasadena-The Woodlands, TX",Months_of_Supply (t-1),-0.01525688282149263
+"Houston-Pasadena-The Woodlands, TX",Year_FE,-0.04519772532335696
+"Dallas-Fort Worth-Arlington, TX",log_Adv_Ind_Employees (t-1),0.6171441278900185
+"Dallas-Fort Worth-Arlington, TX",log_Adv_Ind_Establishments (t-1),0.2998941660428027
+"Dallas-Fort Worth-Arlington, TX",log_All_Avg_Wage_Per_Worker (t-1),0.006710845175810064
+"Dallas-Fort Worth-Arlington, TX",log_Adv_Ind_Avg_Annual_Wages_per_Worker (t),-0.010649522318055105
+"Dallas-Fort Worth-Arlington, TX",log_RD_Intensity (t-1),0.01159697721249104
+"Dallas-Fort Worth-Arlington, TX",log_Adv_Ind_Emp_Share (t-1),-0.022639315099767778
+"Dallas-Fort Worth-Arlington, TX",log_Adv_Ind_Wage_Premium (t-1),0.0013757435073957173
+"Dallas-Fort Worth-Arlington, TX",Number_of_Universities (t-1),0.15418824203512638
+"Dallas-Fort Worth-Arlington, TX",Total_R&D_Expenditure_(x1000) (t-1),0.005888905368737178
+"Dallas-Fort Worth-Arlington, TX",Avg_R&D_per_Institution_(x1000) (t-1),-0.014218403096966599
+"Dallas-Fort Worth-Arlington, TX",log_Productivity (t-1),-0.046751219336893426
+"Dallas-Fort Worth-Arlington, TX",log_median_income (t),0.007589999942820522
+"Dallas-Fort Worth-Arlington, TX",log_poverty_count (t-1),0.36207350807831334
+"Dallas-Fort Worth-Arlington, TX",edu_bachelor_plus_pct (t-1),-0.0012157618015569884
+"Dallas-Fort Worth-Arlington, TX",CoStar_Vacancy_Rate (t-1),-0.08714859131296054
+"Dallas-Fort Worth-Arlington, TX",log_CoStar_Rent_Overall (t-1),-0.1380365572572876
+"Dallas-Fort Worth-Arlington, TX",CoStar_Rent_Growth_12Mo (t-1),-0.05698200529832837
+"Dallas-Fort Worth-Arlington, TX",CoStar_Cap_Rate (t-1),0.0035642800970532088
+"Dallas-Fort Worth-Arlington, TX",CoStar_Market_Cap_Rate (t-1),0.05358944066129401
+"Dallas-Fort Worth-Arlington, TX",log_CoStar_Sales_Transactions (t-1),0.09826400493945871
+"Dallas-Fort Worth-Arlington, TX",LQ_RD_Expenditure (t-1),0.01274201967725959
+"Dallas-Fort Worth-Arlington, TX",log_Rent_To_AdvInd_Wage (t-1),-0.009342675055218307
+"Dallas-Fort Worth-Arlington, TX",log_Business_Entry_Rate (t-1),-0.0638586153361459
+"Dallas-Fort Worth-Arlington, TX",log_Business_Exit_Rate (t-1),0.004349083613289542
+"Dallas-Fort Worth-Arlington, TX",Mature_Firm_Share (t-1),0.002503466440662997
+"Dallas-Fort Worth-Arlington, TX",log_total_vmt_per_capita (t),0.024790950202852095
+"Dallas-Fort Worth-Arlington, TX",log_patent_count (t),0.01683820882340022
+"Dallas-Fort Worth-Arlington, TX",log_Construction_Starts_SF_12Mo (t-1),0.30394432277048716
+"Dallas-Fort Worth-Arlington, TX",log_Delivery_Intensity (t-1),-0.035187476644467405
+"Dallas-Fort Worth-Arlington, TX",log_Avg_Delivered_Building_Size (t-1),0.00036992494496603776
+"Dallas-Fort Worth-Arlington, TX",Months_of_Supply (t-1),-0.005635637521197284
+"Dallas-Fort Worth-Arlington, TX",Year_FE,-0.0522721038516609
+"Boston-Cambridge-Newton, MA-NH",log_Adv_Ind_Employees (t-1),0.5032064248780846
+"Boston-Cambridge-Newton, MA-NH",log_Adv_Ind_Establishments (t-1),0.282032493766059
+"Boston-Cambridge-Newton, MA-NH",log_All_Avg_Wage_Per_Worker (t-1),0.006470190251523167
+"Boston-Cambridge-Newton, MA-NH",log_Adv_Ind_Avg_Annual_Wages_per_Worker (t),-0.005175941219226352
+"Boston-Cambridge-Newton, MA-NH",log_RD_Intensity (t-1),-0.03975855894051415
+"Boston-Cambridge-Newton, MA-NH",log_Adv_Ind_Emp_Share (t-1),-0.0552249207826348
+"Boston-Cambridge-Newton, MA-NH",log_Adv_Ind_Wage_Premium (t-1),-0.03770332430741271
+"Boston-Cambridge-Newton, MA-NH",Number_of_Universities (t-1),0.19625769352989178
+"Boston-Cambridge-Newton, MA-NH",Total_R&D_Expenditure_(x1000) (t-1),-0.0028719267378780645
+"Boston-Cambridge-Newton, MA-NH",Avg_R&D_per_Institution_(x1000) (t-1),-0.012675514881373738
+"Boston-Cambridge-Newton, MA-NH",log_Productivity (t-1),-0.06805362858331009
+"Boston-Cambridge-Newton, MA-NH",log_median_income (t),0.006305462710672262
+"Boston-Cambridge-Newton, MA-NH",log_poverty_count (t-1),0.040973732197961514
+"Boston-Cambridge-Newton, MA-NH",edu_bachelor_plus_pct (t-1),-0.070272383733647
+"Boston-Cambridge-Newton, MA-NH",CoStar_Vacancy_Rate (t-1),-0.18581238287033475
+"Boston-Cambridge-Newton, MA-NH",log_CoStar_Rent_Overall (t-1),-0.12524935141208324
+"Boston-Cambridge-Newton, MA-NH",CoStar_Rent_Growth_12Mo (t-1),-0.08372232240031485
+"Boston-Cambridge-Newton, MA-NH",CoStar_Cap_Rate (t-1),0.0021821721777589924
+"Boston-Cambridge-Newton, MA-NH",CoStar_Market_Cap_Rate (t-1),0.0425078822498535
+"Boston-Cambridge-Newton, MA-NH",log_CoStar_Sales_Transactions (t-1),0.04921112209861704
+"Boston-Cambridge-Newton, MA-NH",LQ_RD_Expenditure (t-1),-0.01616883622554268
+"Boston-Cambridge-Newton, MA-NH",log_Rent_To_AdvInd_Wage (t-1),-0.09225063706069059
+"Boston-Cambridge-Newton, MA-NH",log_Business_Entry_Rate (t-1),-0.013655685914693277
+"Boston-Cambridge-Newton, MA-NH",log_Business_Exit_Rate (t-1),-0.006390773865606867
+"Boston-Cambridge-Newton, MA-NH",Mature_Firm_Share (t-1),-0.008206806926265414
+"Boston-Cambridge-Newton, MA-NH",log_total_vmt_per_capita (t),0.0131271788322511
+"Boston-Cambridge-Newton, MA-NH",log_patent_count (t),0.023664396974003517
+"Boston-Cambridge-Newton, MA-NH",log_Construction_Starts_SF_12Mo (t-1),0.08053086119412917
+"Boston-Cambridge-Newton, MA-NH",log_Delivery_Intensity (t-1),-0.005063418865177279
+"Boston-Cambridge-Newton, MA-NH",log_Avg_Delivered_Building_Size (t-1),-0.010854044130533076
+"Boston-Cambridge-Newton, MA-NH",Months_of_Supply (t-1),0.010365557514136403
+"Boston-Cambridge-Newton, MA-NH",Year_FE,-0.0590035174983409
+"New York-Newark-Jersey City, NY-NJ",log_Adv_Ind_Employees (t-1),0.5680234703829103
+"New York-Newark-Jersey City, NY-NJ",log_Adv_Ind_Establishments (t-1),0.33995734010394824
+"New York-Newark-Jersey City, NY-NJ",log_All_Avg_Wage_Per_Worker (t-1),0.005397793760965561
+"New York-Newark-Jersey City, NY-NJ",log_Adv_Ind_Avg_Annual_Wages_per_Worker (t),-0.007642984944282393
+"New York-Newark-Jersey City, NY-NJ",log_RD_Intensity (t-1),0.005631965256457512
+"New York-Newark-Jersey City, NY-NJ",log_Adv_Ind_Emp_Share (t-1),0.022670674148385472
+"New York-Newark-Jersey City, NY-NJ",log_Adv_Ind_Wage_Premium (t-1),0.042093929977660746
+"New York-Newark-Jersey City, NY-NJ",Number_of_Universities (t-1),0.16952252645612728
+"New York-Newark-Jersey City, NY-NJ",Total_R&D_Expenditure_(x1000) (t-1),-0.00718236217665572
+"New York-Newark-Jersey City, NY-NJ",Avg_R&D_per_Institution_(x1000) (t-1),-0.012869474304518602
+"New York-Newark-Jersey City, NY-NJ",log_Productivity (t-1),-0.0561769499490312
+"New York-Newark-Jersey City, NY-NJ",log_median_income (t),0.008797449345113737
+"New York-Newark-Jersey City, NY-NJ",log_poverty_count (t-1),0.5037318515044794
+"New York-Newark-Jersey City, NY-NJ",edu_bachelor_plus_pct (t-1),-0.06183329736028409
+"New York-Newark-Jersey City, NY-NJ",CoStar_Vacancy_Rate (t-1),-0.17476678609503377
+"New York-Newark-Jersey City, NY-NJ",log_CoStar_Rent_Overall (t-1),-0.17715457344804195
+"New York-Newark-Jersey City, NY-NJ",CoStar_Rent_Growth_12Mo (t-1),-0.06896759464721884
+"New York-Newark-Jersey City, NY-NJ",CoStar_Cap_Rate (t-1),0.005311944191086452
+"New York-Newark-Jersey City, NY-NJ",CoStar_Market_Cap_Rate (t-1),0.03757264175324932
+"New York-Newark-Jersey City, NY-NJ",log_CoStar_Sales_Transactions (t-1),0.08118050337519693
+"New York-Newark-Jersey City, NY-NJ",LQ_RD_Expenditure (t-1),0.010139458054852503
+"New York-Newark-Jersey City, NY-NJ",log_Rent_To_AdvInd_Wage (t-1),-0.25307448709981495
+"New York-Newark-Jersey City, NY-NJ",log_Business_Entry_Rate (t-1),-0.0571895764981065
+"New York-Newark-Jersey City, NY-NJ",log_Business_Exit_Rate (t-1),0.001811102831263677
+"New York-Newark-Jersey City, NY-NJ",Mature_Firm_Share (t-1),-0.0075573441976152
+"New York-Newark-Jersey City, NY-NJ",log_total_vmt_per_capita (t),-0.012597098558166306
+"New York-Newark-Jersey City, NY-NJ",log_patent_count (t),0.031145252354074327
+"New York-Newark-Jersey City, NY-NJ",log_Construction_Starts_SF_12Mo (t-1),0.11111780032404663
+"New York-Newark-Jersey City, NY-NJ",log_Delivery_Intensity (t-1),0.013049999774605211
+"New York-Newark-Jersey City, NY-NJ",log_Avg_Delivered_Building_Size (t-1),-0.0065354885726860105
+"New York-Newark-Jersey City, NY-NJ",Months_of_Supply (t-1),-0.0039789025552974915
+"New York-Newark-Jersey City, NY-NJ",Year_FE,-0.06950539294574608
+"San Francisco-Oakland-Fremont, CA",log_Adv_Ind_Employees (t-1),0.42975985012245926
+"San Francisco-Oakland-Fremont, CA",log_Adv_Ind_Establishments (t-1),0.1726358284070628
+"San Francisco-Oakland-Fremont, CA",log_All_Avg_Wage_Per_Worker (t-1),0.006822644107691816
+"San Francisco-Oakland-Fremont, CA",log_Adv_Ind_Avg_Annual_Wages_per_Worker (t),-0.006144722971236621
+"San Francisco-Oakland-Fremont, CA",log_RD_Intensity (t-1),-0.045055149383253106
+"San Francisco-Oakland-Fremont, CA",log_Adv_Ind_Emp_Share (t-1),-0.07130724224682677
+"San Francisco-Oakland-Fremont, CA",log_Adv_Ind_Wage_Premium (t-1),-0.011010938471610035
+"San Francisco-Oakland-Fremont, CA",Number_of_Universities (t-1),-0.04707227464653744
+"San Francisco-Oakland-Fremont, CA",Total_R&D_Expenditure_(x1000) (t-1),-0.005205502272391194
+"San Francisco-Oakland-Fremont, CA",Avg_R&D_per_Institution_(x1000) (t-1),-0.013017440603942826
+"San Francisco-Oakland-Fremont, CA",log_Productivity (t-1),-0.06028518652024433
+"San Francisco-Oakland-Fremont, CA",log_median_income (t),0.009554033382810828
+"San Francisco-Oakland-Fremont, CA",log_poverty_count (t-1),0.005756582513579009
+"San Francisco-Oakland-Fremont, CA",edu_bachelor_plus_pct (t-1),-0.06395180149372927
+"San Francisco-Oakland-Fremont, CA",CoStar_Vacancy_Rate (t-1),-0.0932497283648027
+"San Francisco-Oakland-Fremont, CA",log_CoStar_Rent_Overall (t-1),-0.14070044084670108
+"San Francisco-Oakland-Fremont, CA",CoStar_Rent_Growth_12Mo (t-1),-0.10296574045369711
+"San Francisco-Oakland-Fremont, CA",CoStar_Cap_Rate (t-1),0.0025174022628693545
+"San Francisco-Oakland-Fremont, CA",CoStar_Market_Cap_Rate (t-1),0.036524521188988746
+"San Francisco-Oakland-Fremont, CA",log_CoStar_Sales_Transactions (t-1),-0.015947585819640394
+"San Francisco-Oakland-Fremont, CA",LQ_RD_Expenditure (t-1),-0.005530863567308048
+"San Francisco-Oakland-Fremont, CA",log_Rent_To_AdvInd_Wage (t-1),-0.29847577414805365
+"San Francisco-Oakland-Fremont, CA",log_Business_Entry_Rate (t-1),-0.051121069891663394
+"San Francisco-Oakland-Fremont, CA",log_Business_Exit_Rate (t-1),0.003392234206265907
+"San Francisco-Oakland-Fremont, CA",Mature_Firm_Share (t-1),-0.006825412418645878
+"San Francisco-Oakland-Fremont, CA",log_total_vmt_per_capita (t),-0.04229527976290318
+"San Francisco-Oakland-Fremont, CA",log_patent_count (t),0.03411495385523894
+"San Francisco-Oakland-Fremont, CA",log_Construction_Starts_SF_12Mo (t-1),0.043990713584780926
+"San Francisco-Oakland-Fremont, CA",log_Delivery_Intensity (t-1),0.030505424466345882
+"San Francisco-Oakland-Fremont, CA",log_Avg_Delivered_Building_Size (t-1),-0.004392996046954455
+"San Francisco-Oakland-Fremont, CA",Months_of_Supply (t-1),0.010790751499605964
+"San Francisco-Oakland-Fremont, CA",Year_FE,-0.07845327356447516
+"San Jose-Sunnyvale-Santa Clara, CA",log_Adv_Ind_Employees (t-1),0.43894243251344495
+"San Jose-Sunnyvale-Santa Clara, CA",log_Adv_Ind_Establishments (t-1),0.22051238632723588
+"San Jose-Sunnyvale-Santa Clara, CA",log_All_Avg_Wage_Per_Worker (t-1),0.0067198043326742235
+"San Jose-Sunnyvale-Santa Clara, CA",log_Adv_Ind_Avg_Annual_Wages_per_Worker (t),-0.006976463629245767
+"San Jose-Sunnyvale-Santa Clara, CA",log_RD_Intensity (t-1),-0.0395936835688801
+"San Jose-Sunnyvale-Santa Clara, CA",log_Adv_Ind_Emp_Share (t-1),-0.07351807483299207
+"San Jose-Sunnyvale-Santa Clara, CA",log_Adv_Ind_Wage_Premium (t-1),-0.0063799224287152505
+"San Jose-Sunnyvale-Santa Clara, CA",Number_of_Universities (t-1),-0.03277391624079461
+"San Jose-Sunnyvale-Santa Clara, CA",Total_R&D_Expenditure_(x1000) (t-1),0.01262504136050084
+"San Jose-Sunnyvale-Santa Clara, CA",Avg_R&D_per_Institution_(x1000) (t-1),-0.01364273989171572
+"San Jose-Sunnyvale-Santa Clara, CA",log_Productivity (t-1),-0.04479885755431714
+"San Jose-Sunnyvale-Santa Clara, CA",log_median_income (t),0.00983112687176661
+"San Jose-Sunnyvale-Santa Clara, CA",log_poverty_count (t-1),-0.13270616782161385
+"San Jose-Sunnyvale-Santa Clara, CA",edu_bachelor_plus_pct (t-1),-0.06819453978695095
+"San Jose-Sunnyvale-Santa Clara, CA",CoStar_Vacancy_Rate (t-1),-0.09135993470336741
+"San Jose-Sunnyvale-Santa Clara, CA",log_CoStar_Rent_Overall (t-1),-0.12747692697175653
+"San Jose-Sunnyvale-Santa Clara, CA",CoStar_Rent_Growth_12Mo (t-1),-0.08338104344255225
+"San Jose-Sunnyvale-Santa Clara, CA",CoStar_Cap_Rate (t-1),0.004016947958442194
+"San Jose-Sunnyvale-Santa Clara, CA",CoStar_Market_Cap_Rate (t-1),0.06398395284479831
+"San Jose-Sunnyvale-Santa Clara, CA",log_CoStar_Sales_Transactions (t-1),-0.004437093119335711
+"San Jose-Sunnyvale-Santa Clara, CA",LQ_RD_Expenditure (t-1),-0.0008520870390386181
+"San Jose-Sunnyvale-Santa Clara, CA",log_Rent_To_AdvInd_Wage (t-1),-0.12716385174344552
+"San Jose-Sunnyvale-Santa Clara, CA",log_Business_Entry_Rate (t-1),-0.04591504264731553
+"San Jose-Sunnyvale-Santa Clara, CA",log_Business_Exit_Rate (t-1),0.002520918086449223
+"San Jose-Sunnyvale-Santa Clara, CA",Mature_Firm_Share (t-1),-0.007102072476951583
+"San Jose-Sunnyvale-Santa Clara, CA",log_total_vmt_per_capita (t),-0.03259889077931709
+"San Jose-Sunnyvale-Santa Clara, CA",log_patent_count (t),0.04573335081395515
+"San Jose-Sunnyvale-Santa Clara, CA",log_Construction_Starts_SF_12Mo (t-1),0.05593061813926804
+"San Jose-Sunnyvale-Santa Clara, CA",log_Delivery_Intensity (t-1),0.03644255965659719
+"San Jose-Sunnyvale-Santa Clara, CA",log_Avg_Delivered_Building_Size (t-1),-0.009994563493878329
+"San Jose-Sunnyvale-Santa Clara, CA",Months_of_Supply (t-1),0.011471640123027647
+"San Jose-Sunnyvale-Santa Clara, CA",Year_FE,-0.07542936256314936

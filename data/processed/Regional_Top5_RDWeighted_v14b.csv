@@ -1,0 +1,41 @@
+Region,MSA_Name,R&D_Weighted_Gap_SF,Rank_Type
+Northeast,"Allentown-Bethlehem-Easton, PA-NJ",2776667.501449587,Top 5 Surplus
+Northeast,"Worcester, MA",1754212.47413156,Top 5 Surplus
+Northeast,"Buffalo-Cheektowaga, NY",1337736.0325351302,Top 5 Surplus
+Northeast,"Scranton--Wilkes-Barre, PA",738731.9381978556,Top 5 Surplus
+Northeast,"Rochester, NY",643757.9977379298,Top 5 Surplus
+Northeast,"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",-6223430.723279858,Top 5 Deficit
+Northeast,"New York-Newark-Jersey City, NY-NJ",-3554950.859192097,Top 5 Deficit
+Northeast,"Bridgeport-Stamford-Danbury, CT",-1182988.0276637585,Top 5 Deficit
+Northeast,"Hartford-West Hartford-East Hartford, CT",-856880.1672736825,Top 5 Deficit
+Northeast,"Pittsburgh, PA",-834792.9286783636,Top 5 Deficit
+Midwest,"Indianapolis-Carmel-Greenwood, IN",4041752.194249693,Top 5 Surplus
+Midwest,"St. Louis, MO-IL",954269.8949872698,Top 5 Surplus
+Midwest,"Toledo, OH",939757.709590371,Top 5 Surplus
+Midwest,"Des Moines-West Des Moines, IA",735007.3624378718,Top 5 Surplus
+Midwest,"Wichita, KS",291555.0948570565,Top 5 Surplus
+Midwest,"Chicago-Naperville-Elgin, IL-IN",-4276507.420691993,Top 5 Deficit
+Midwest,"Detroit-Warren-Dearborn, MI",-3771176.4744620733,Top 5 Deficit
+Midwest,"Cincinnati, OH-KY-IN",-2276241.9352051867,Top 5 Deficit
+Midwest,"Cleveland, OH",-1915766.3643252421,Top 5 Deficit
+Midwest,"Minneapolis-St. Paul-Bloomington, MN-WI",-1601339.9817901165,Top 5 Deficit
+South,"Dallas-Fort Worth-Arlington, TX",8475165.661005707,Top 5 Surplus
+South,"Memphis, TN-MS-AR",4217297.615588918,Top 5 Surplus
+South,"Charleston-North Charleston, SC",2300094.6504906225,Top 5 Surplus
+South,"Greenville-Anderson-Greer, SC",1715180.5009913174,Top 5 Surplus
+South,"Austin-Round Rock-San Marcos, TX",1624571.4397457957,Top 5 Surplus
+South,"Atlanta-Sandy Springs-Roswell, GA",-7501191.463482707,Top 5 Deficit
+South,"Washington-Arlington-Alexandria, DC-VA-MD-WV",-5611512.343763033,Top 5 Deficit
+South,"Miami-Fort Lauderdale-West Palm Beach, FL",-2552398.137279829,Top 5 Deficit
+South,"San Antonio-New Braunfels, TX",-1291439.5759785043,Top 5 Deficit
+South,"Tampa-St. Petersburg-Clearwater, FL",-1250652.793177569,Top 5 Deficit
+West,"Seattle-Tacoma-Bellevue, WA",3966689.1190521745,Top 5 Surplus
+West,"Phoenix-Mesa-Chandler, AZ",3207843.4242496174,Top 5 Surplus
+West,"Riverside-San Bernardino-Ontario, CA",3205817.617098465,Top 5 Surplus
+West,"San Jose-Sunnyvale-Santa Clara, CA",2564694.0853641927,Top 5 Surplus
+West,"Denver-Aurora-Centennial, CO",1962270.1997286552,Top 5 Surplus
+West,"Los Angeles-Long Beach-Anaheim, CA",-793689.9799839272,Top 5 Deficit
+West,"Sacramento-Roseville-Folsom, CA",-650690.4261767393,Top 5 Deficit
+West,"Colorado Springs, CO",-155829.60822658672,Top 5 Deficit
+West,"Albuquerque, NM",-48539.53486621013,Top 5 Deficit
+West,"Urban Honolulu, HI",97112.10097312418,Top 5 Deficit

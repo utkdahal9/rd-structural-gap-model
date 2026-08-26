@@ -1,0 +1,33 @@
+Feature,Mean_SHAP
+log_Adv_Ind_Employees (t-1),0.32449560232673735
+log_Adv_Ind_Establishments (t-1),0.18463260552159655
+CoStar_Vacancy_Rate (t-1),0.17424967861971077
+log_poverty_count (t-1),0.13486182078449474
+log_CoStar_Rent_Overall (t-1),0.10880845382857054
+log_Rent_To_AdvInd_Wage (t-1),0.09081232758924553
+Year_FE,0.09035800791209267
+log_Construction_Starts_SF_12Mo (t-1),0.07422689531723652
+log_Adv_Ind_Wage_Premium (t-1),0.04989922294321644
+log_Delivery_Intensity (t-1),0.048805236837153966
+CoStar_Rent_Growth_12Mo (t-1),0.04745146718889681
+Number_of_Universities (t-1),0.04237938057153002
+log_Business_Entry_Rate (t-1),0.039745668315089536
+log_patent_count (t),0.0390629531727117
+log_CoStar_Sales_Transactions (t-1),0.03536824461059924
+LQ_RD_Expenditure (t-1),0.0267676045429275
+log_Adv_Ind_Emp_Share (t-1),0.02311227391510287
+CoStar_Market_Cap_Rate (t-1),0.020430565220247738
+log_total_vmt_per_capita (t),0.014821955371866006
+log_RD_Intensity (t-1),0.014399805765004225
+log_All_Avg_Wage_Per_Worker (t-1),0.013949999107568141
+Months_of_Supply (t-1),0.013306096987771838
+edu_bachelor_plus_pct (t-1),0.01253051781966583
+log_Productivity (t-1),0.011908356830197846
+log_median_income (t),0.010443086718334365
+Avg_R&D_per_Institution_(x1000) (t-1),0.009044971079292474
+log_Avg_Delivered_Building_Size (t-1),0.008132610244595022
+log_Adv_Ind_Avg_Annual_Wages_per_Worker (t),0.007284039348155151
+log_Business_Exit_Rate (t-1),0.005017145595039638
+CoStar_Cap_Rate (t-1),0.004843640658479718
+Total_R&D_Expenditure_(x1000) (t-1),0.0033008559771702793
+Mature_Firm_Share (t-1),0.0014685036159937399
