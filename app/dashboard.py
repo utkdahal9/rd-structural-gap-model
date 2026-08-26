@@ -164,6 +164,11 @@ CASE_STUDY_IMAGES = {
     "Seattle-Tacoma-Bellevue, WA": "casestudy_dashboard_Seattle_Tacoma_Bellevue_WA.png",
     "Houston-Pasadena-The Woodlands, TX": "casestudy_dashboard_Houston_Pasadena_The_Woodlands_TX.png",
     "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD": "casestudy_dashboard_Philadelphia_Camden_Wilmington_PA_NJ_DE_MD.png",
+    "Dallas-Fort Worth-Arlington, TX": "casestudy_dashboard_Dallas_Fort_Worth_Arlington_TX.png",
+    "Boston-Cambridge-Newton, MA-NH": "casestudy_dashboard_Boston_Cambridge_Newton_MA_NH.png",
+    "New York-Newark-Jersey City, NY-NJ": "casestudy_dashboard_New_York_Newark_Jersey_City_NY_NJ.png",
+    "San Francisco-Oakland-Fremont, CA": "casestudy_dashboard_San_Francisco_Oakland_Fremont_CA.png",
+    "San Jose-Sunnyvale-Santa Clara, CA": "casestudy_dashboard_San_Jose_Sunnyvale_Santa_Clara_CA.png",
 }
 
 RANK_VS_PCT_NOTE = (
@@ -541,10 +546,8 @@ with tab_casestudies:
                 st.info(f"Figure not found at `figures/{CASE_STUDY_IMAGES[msa_pick]}`.")
         else:
             st.caption(
-                "No pre-built multi-panel figure exists for this MSA yet "
-                "— the original analysis only generated these for "
-                "Seattle, Houston, and Philadelphia. Profile data is "
-                "shown below regardless."
+                "No pre-built multi-panel figure exists for this MSA — "
+                "profile data is shown below regardless."
             )
 
         if conv_col is not None:
