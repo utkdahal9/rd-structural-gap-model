@@ -12,9 +12,9 @@ first). Each section degrades gracefully with a clear message if its
 source file isn't present yet, rather than crashing the whole app.
 
 UNITS NOTE: the underlying model predicts log(Available_SF_Total), so
-Structural_Gap in the source CSVs is a log-space value. Everywhere this
-app displays that number to a person, it converts it to a percentage
-via (exp(x) - 1) * 100 for readability.
+Structural_Gap (and Deviation0) in the source CSVs are log-space values.
+Everywhere this app displays these to a person, it converts them to a
+percentage via (exp(x) - 1) * 100 for readability.
 
 NARRATIVE NOTE: every chart is followed by a plain-English "Takeaway"
 sentence computed live from the actual data, not hardcoded. Bold text
@@ -58,7 +58,7 @@ def missing_data_notice(filename: str):
 
 
 def to_pct(series: pd.Series) -> pd.Series:
-    """Convert the model's log-space Structural_Gap to a plain percentage."""
+    """Convert a log-space value to a plain percentage."""
     return (np.exp(series) - 1) * 100
 
 
@@ -344,20 +344,75 @@ with tab_forecast:
     st.divider()
     msa_fc = load_csv("MeanReversion_RDWeighted_ByMSA_v14b.csv")
     if msa_fc is not None:
-        st.subheader("Per-MSA forecast")
+        st.subheader("Per-MSA equilibrium status")
         st.markdown(
-            "Same trajectory concept, broken out by individual metro — "
-            "select one to see its own projected path to 2045."
+            "This file captures each MSA's equilibrium anchor and its "
+            "distance from it as of 2023, not a full year-by-year series. "
+            "Using the 30%/year decay rate documented in the methodology, "
+            "the chart below projects each MSA's own path back toward "
+            "equilibrium — an approximation based on the standard rate, "
+            "not a per-MSA calibrated forecast. See "
+            "MeanReversion_RDWeighted_Lambda_Sensitivity_v14b.csv in the "
+            "repo for how sensitive this is to that assumption."
         )
         msa_name_col = find_col(msa_fc, ["MSA_Name", "MSA"])
-        if msa_name_col:
+        dev_col = find_col(msa_fc, ["Deviation0"])
+        converged_col = find_col(msa_fc, ["Already_Converged_2023", "Already_Converged"])
+
+        if msa_name_col and dev_col:
             msa_pick = st.selectbox(
                 "Select an MSA", sorted(msa_fc[msa_name_col].unique()), key="forecast_msa"
             )
-            st.dataframe(
-                msa_fc[msa_fc[msa_name_col] == msa_pick],
-                use_container_width=True, hide_index=True,
+            row = msa_fc[msa_fc[msa_name_col] == msa_pick].iloc[0]
+            dev0 = row[dev_col]
+            dev0_pct = to_pct(pd.Series([dev0])).iloc[0]
+
+            LAMBDA = 0.30
+            THRESH_LOG = np.log(1.05)  # treat +/-5% as effectively converged
+            anchor_year, max_year = 2023, 2045
+            years = list(range(anchor_year, max_year + 1))
+            traj = [dev0 * ((1 - LAMBDA) ** (y - anchor_year)) for y in years]
+            traj_pct = to_pct(pd.Series(traj)).tolist()
+
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(
+                x=years, y=traj_pct, mode="lines",
+                name="Projected path (30%/yr decay)",
+                line=dict(color="#1f77b4", width=2.5, dash="dash"),
+            ))
+            fig.add_hline(y=0, line_dash="dot", line_color="gray",
+                          annotation_text="Equilibrium")
+            fig.update_layout(
+                title=f"{msa_pick} — Projected Path to Equilibrium",
+                yaxis_title="Deviation from equilibrium (%)",
+                xaxis_title="Year",
             )
+            st.plotly_chart(fig, use_container_width=True)
+
+            already_converged = bool(row[converged_col]) if converged_col else None
+            if already_converged:
+                status = "This MSA was already within the effectively-converged range as of 2023."
+            else:
+                if abs(dev0) <= THRESH_LOG:
+                    close_yr = anchor_year
+                else:
+                    t = np.log(THRESH_LOG / abs(dev0)) / np.log(1 - LAMBDA)
+                    proj_year = anchor_year + int(np.ceil(t))
+                    close_yr = proj_year if proj_year <= max_year else None
+                if close_yr:
+                    status = (
+                        f"Starting from a {dev0_pct:+.1f}% deviation in 2023, "
+                        f"this MSA is projected to settle within ±5% of "
+                        f"equilibrium by {close_yr} at the standard decay rate."
+                    )
+                else:
+                    status = (
+                        f"Starting from a {dev0_pct:+.1f}% deviation in 2023, "
+                        f"this MSA is not projected to fully close within "
+                        f"the {max_year} forecast window at the standard "
+                        f"decay rate."
+                    )
+            st.markdown(f"**Takeaway:** {status}")
         else:
             st.dataframe(msa_fc, use_container_width=True, hide_index=True)
 
