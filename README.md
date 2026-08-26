@@ -7,7 +7,7 @@ whether the post-pandemic supply of available R&D space diverged
 structurally from what pre-pandemic trends would predict — and if so,
 where, by how much, and when (if ever) it's projected to normalize.
 
-**[Live dashboard →](#)** *(placeholder — add your deployed Streamlit URL here)*
+**[Live dashboard →](#)** *(placeholder — add deployed Streamlit URL here)*
 
 ## Key results
 - MSA-level LOOCV R² ≈ 0.82 for the counterfactual available-space model.
@@ -56,9 +56,8 @@ scratch, or reach out for access to a de-identified processed panel.
 
 ## Setup
 ```bash
-git clone https://github.com/<your-username>/rd-covid-counterfactual.git
-cd rd-covid-counterfactual
-python -m venv .venv && source .venv/bin/activate
+git clone https://github.com/utkdahal9/rd-structural-gap-model.git
+cd rd-structural-gap-model
 pip install -r requirements.txt
 ```
 
@@ -79,10 +78,10 @@ streamlit run app/dashboard.py
 ```
 
 ## Background
-Developed as part of graduate research at the University of Southern
-Mississippi, supporting a NARSC (North American Regional Science Council)
-conference paper, *"Measuring the Innovation Divide: The Metropolitan
-Geography of Structural Gaps in U.S. R&D Space Markets."*
+Developed as part of NSF (National Science Foundation)-funded graduate
+research at the University of Southern Mississippi, under a project
+titled *"Measuring the Innovation Divide: The Metropolitan Geography
+of Structural Gaps in U.S. R&D Space Markets."*
 
 ## License
 MIT — see [LICENSE](LICENSE).
