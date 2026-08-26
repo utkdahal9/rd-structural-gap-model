@@ -17,16 +17,21 @@ Structural_Gap (and Deviation0) in the source CSVs are log-space values,
 converted to a percentage via (exp(x) - 1) * 100 for readability. The
 R&D-weighted gap figures used for regional ranking and case-study
 summaries (Mean_Gap_RDWeighted_*, R&D_Weighted_Gap_SF) are a DIFFERENT
-metric — raw square footage, not log-space — and are never run through
-that percentage conversion. Where a percentage view of a ranked MSA is
-useful, this app looks up that MSA's own Structural_Gap_% from the main
-results file instead of converting the SF figure.
+metric — raw square footage, not log-space — never run through that
+conversion. They're ABSOLUTE figures that scale with market size, so a
+large metro can rank higher on this measure than a smaller metro with
+a bigger PERCENTAGE gap. Both are shown, clearly labeled, rather than
+picking one.
 
-EQUILIBRIUM NOTE: the mean-reversion forecast does not project the gap
-back to 0%. Each MSA reverts toward its OWN long-run equilibrium target
-(Residual_Equilibrium + Bias_2023 in the source data), which is usually
-NOT zero. The national number is the R&D-weighted average of all 100
-of those individual targets.
+MARKET_CATEGORY NOTE: "Structurally Balanced" / "Moderate Surplus" /
+etc. are NOT based on a fixed percentage threshold. They come from the
+model's own classification: a z-score of the gap against LOOCV_SIGMA
+(the model's typical prediction noise, ~0.356 log units / dynamically
+loaded from SizeBias_Correction_Verification.csv). That means
+"Structurally Balanced" spans roughly -16% to +19%, not some narrow
+band around zero. This dashboard always uses the model's own category
+label rather than recomputing a different one, and explains the real
+thresholds explicitly wherever the category is shown.
 
 NARRATIVE NOTE: every chart is followed by a plain-English "Takeaway"
 sentence computed live from the actual data. Bold text is reserved for
@@ -48,6 +53,7 @@ from src.regions import add_region_column, REGIONS  # noqa: E402
 
 DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
 FIGURES_DIR = Path(__file__).resolve().parents[1] / "figures"
+IMAGE_MAX_WIDTH = 800  # cap static figure width so they don't stretch/blur full-page
 
 st.set_page_config(
     page_title="R&D Space Market Structural Gap",
@@ -93,27 +99,6 @@ def find_col(df: pd.DataFrame, candidates: list[str]) -> str | None:
     return None
 
 
-def describe_gap(pct: float, subject: str = "metros") -> str:
-    """Plain-English description of a structural gap percentage. No inline
-    bold — bold is reserved for section labels like 'Takeaway:'."""
-    if pct > 5:
-        return (
-            f"That is a surplus: on average, {subject} currently have "
-            f"{pct:+.1f}% more available R&D space than the pre-COVID "
-            f"trend would have predicted."
-        )
-    elif pct < -5:
-        return (
-            f"That is a deficit: on average, {subject} currently have "
-            f"{pct:+.1f}% less available R&D space than the pre-COVID "
-            f"trend would have predicted, i.e. tighter supply than expected."
-        )
-    return (
-        f"That is roughly balanced — the {pct:+.1f}% average gap is "
-        f"close to what the pre-COVID trend predicted for {subject}."
-    )
-
-
 def latest_pct_lookup(results_df: pd.DataFrame) -> pd.Series | None:
     """Series of each MSA's latest-year Structural_Gap_%, indexed by MSA_Name."""
     if results_df is None or "Structural_Gap" not in results_df:
@@ -122,11 +107,67 @@ def latest_pct_lookup(results_df: pd.DataFrame) -> pd.Series | None:
     return to_pct(recent.set_index("MSA_Name")["Structural_Gap"])
 
 
+@st.cache_data
+def category_thresholds_pct():
+    """Real Market_Category boundaries in percentage terms, computed from
+    the model's own LOOCV_SIGMA. Returns None if the file isn't available."""
+    sb = load_csv("SizeBias_Correction_Verification.csv")
+    if sb is None:
+        return None
+    metric_col = find_col(sb, ["Metric"])
+    value_col = find_col(sb, ["Value"])
+    if not metric_col or not value_col:
+        return None
+    lookup = sb.set_index(metric_col)[value_col]
+    sigma = lookup.get("LOOCV_SIGMA_Corrected")
+    if sigma is None:
+        return None
+    sig_hi = (np.exp(1.5 * sigma) - 1) * 100
+    sig_lo = (np.exp(-1.5 * sigma) - 1) * 100
+    mod_hi = (np.exp(0.5 * sigma) - 1) * 100
+    mod_lo = (np.exp(-0.5 * sigma) - 1) * 100
+    return sig_hi, mod_hi, mod_lo, sig_lo
+
+
+def category_explainer_text() -> str:
+    bounds = category_thresholds_pct()
+    if bounds is None:
+        return (
+            "Market categories (Significant/Moderate Surplus or Deficit, "
+            "Structurally Balanced) are based on a z-score of the gap "
+            "against the model's own prediction noise (LOOCV_SIGMA), not "
+            "a fixed percentage band — so \"Structurally Balanced\" can "
+            "span a wider range than ±5%."
+        )
+    sig_hi, mod_hi, mod_lo, sig_lo = bounds
+    return (
+        f"Market categories aren't based on a fixed percentage band — "
+        f"they're a z-score of the gap against the model's own typical "
+        f"prediction noise (LOOCV_SIGMA). In percentage terms, that "
+        f"currently works out to roughly: **Significant Surplus** above "
+        f"{sig_hi:+.0f}%, **Moderate Surplus** {mod_hi:+.0f}% to "
+        f"{sig_hi:+.0f}%, **Structurally Balanced** {mod_lo:+.0f}% to "
+        f"{mod_hi:+.0f}%, **Moderate Deficit** {sig_lo:+.0f}% to "
+        f"{mod_lo:+.0f}%, and **Significant Deficit** below {sig_lo:+.0f}%. "
+        f"That's why a double-digit negative number can still read as "
+        f"\"balanced\" — the bands are wider than intuition suggests."
+    )
+
+
 CASE_STUDY_IMAGES = {
     "Seattle-Tacoma-Bellevue, WA": "casestudy_dashboard_Seattle_Tacoma_Bellevue_WA.png",
     "Houston-Pasadena-The Woodlands, TX": "casestudy_dashboard_Houston_Pasadena_The_Woodlands_TX.png",
     "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD": "casestudy_dashboard_Philadelphia_Camden_Wilmington_PA_NJ_DE_MD.png",
 }
+
+RANK_VS_PCT_NOTE = (
+    "Rank is based on absolute R&D-weighted square footage, which "
+    "scales with market size — a large metro can outrank a smaller one "
+    "even with a lower percentage gap, because the same percentage move "
+    "represents far more square feet in a bigger market. Percentage and "
+    "absolute rank are expected to disagree; neither is \"the real\" "
+    "number, they answer different questions."
+)
 
 
 # ── Header / intro ──────────────────────────────────────────────────
@@ -213,7 +254,12 @@ with tab_overview:
                 f"counterfactual lines above diverge inside the shaded "
                 f"COVID period and stay apart afterward — the visual "
                 f"signature of a lasting change rather than a temporary "
-                f"blip. {describe_gap(gap_pct)}"
+                f"blip. On average, that's a "
+                f"{'surplus' if gap_pct > 0 else 'deficit'} of "
+                f"{gap_pct:+.1f}% relative to the pre-COVID trend "
+                f"(this is a simple average across 100 MSAs, not a "
+                f"single market category — see the By MSA tab for how "
+                f"individual metros are classified)."
             )
 
 # ── By-MSA detail ─────────────────────────────────────────────────────
@@ -241,11 +287,18 @@ with tab_msa:
             msa_df = msa_df.copy()
             msa_df["Structural_Gap_%"] = to_pct(msa_df["Structural_Gap"]).round(1)
             latest_row = msa_df.iloc[-1]
-            st.markdown(
-                f"**Takeaway for {msa_choice}:** as of {int(latest_row['Year'])}, "
-                f"{describe_gap(latest_row['Structural_Gap_%'], subject='this metro')}"
-            )
-            cols = ["Year", "Structural_Gap_%", "Market_Category"] if "Market_Category" in msa_df else ["Year", "Structural_Gap_%"]
+            has_category = "Market_Category" in msa_df
+            if has_category:
+                st.markdown(
+                    f"**Takeaway for {msa_choice}:** as of "
+                    f"{int(latest_row['Year'])}, this metro's gap is "
+                    f"classified **{latest_row['Market_Category']}** "
+                    f"({latest_row['Structural_Gap_%']:+.1f}% relative to "
+                    f"the counterfactual)."
+                )
+                with st.expander("What do these categories mean?"):
+                    st.markdown(category_explainer_text())
+            cols = ["Year", "Structural_Gap_%", "Market_Category"] if has_category else ["Year", "Structural_Gap_%"]
             st.dataframe(msa_df[cols], use_container_width=True, hide_index=True)
 
 # ── Regional comparison ────────────────────────────────────────────────
@@ -288,8 +341,9 @@ with tab_regional:
                 spread = latest_by_region[highest_region] - latest_by_region[lowest_region]
                 st.markdown(
                     f"**Takeaway:** as of {int(latest_year)}, {highest_region} "
-                    f"shows the largest gap ({latest_by_region[highest_region]:+.1f}%), "
-                    f"while {lowest_region} shows the smallest "
+                    f"shows the largest average gap "
+                    f"({latest_by_region[highest_region]:+.1f}%), while "
+                    f"{lowest_region} shows the smallest "
                     f"({latest_by_region[lowest_region]:+.1f}%). A {spread:.1f} "
                     f"point spread suggests the pandemic's structural impact "
                     f"was regional, not uniform nationwide."
@@ -301,12 +355,14 @@ with tab_regional:
     st.subheader("Top surplus and deficit markets by region")
     st.markdown(
         "The five biggest surpluses and five biggest deficits within "
-        "each Census region. Ranking is based on the R&D-weighted gap "
-        "in square feet (a large gap in a metro with little R&D activity "
-        "counts less than the same-sized gap in an R&D hub) — the figure "
-        "shown below is each MSA's overall structural gap percentage, "
-        "for consistency with the rest of this dashboard."
+        "each Census region, ranked by R&D-weighted gap in absolute "
+        "square feet. The percentage shown is that MSA's own overall "
+        "structural gap, for consistency with the rest of this "
+        "dashboard — it will sometimes look inconsistent with the "
+        "\"Surplus\"/\"Deficit\" label, since the ranking and the "
+        "percentage measure different things."
     )
+    st.markdown(RANK_VS_PCT_NOTE)
     top5 = load_csv("Regional_Top5_RDWeighted_v14b.csv")
     if top5 is None:
         missing_data_notice("Regional_Top5_RDWeighted_v14b.csv")
@@ -325,6 +381,11 @@ with tab_regional:
 
     st.divider()
     st.subheader("Small-base, fast-growing R&D markets")
+    st.markdown(
+        "These 20 metros have the smallest R&D real estate base "
+        "(2015–2018 anchor period) in the panel — markets that may be "
+        "emerging R&D hubs rather than established ones."
+    )
     smallbase = load_csv("Top20_SmallBase_Growth_LQTrend_v14b.csv")
     if smallbase is None:
         missing_data_notice("Top20_SmallBase_Growth_LQTrend_v14b.csv")
@@ -343,15 +404,20 @@ with tab_regional:
         show_cols = [c for c in ["MSA_Name", "CAGR (%)", "LQ Trend"] if c in display.columns]
         st.dataframe(display[show_cols], use_container_width=True, hide_index=True)
         st.markdown(
-            "**CAGR** is the compound annual growth rate of available R&D "
-            "space for that metro — negative values mean available space "
-            "has been shrinking over time, consistent with rapid demand "
-            "absorption in a small, emerging market. **LQ Trend** tracks "
-            "the metro's advanced-industry employment location quotient "
-            "(a measure of how concentrated R&D-relevant employment is "
-            "there relative to the nation): rising means that "
-            "concentration is increasing year over year, declining means "
-            "it's easing."
+            "**CAGR** is the compound annual growth rate of *available* "
+            "(i.e. unleased) R&D space specifically, from a 2015–2018 "
+            "anchor to a 2021–2023 recent period — not overall real "
+            "estate stock or demand. Negative values mean the pool of "
+            "available space has been shrinking, which is consistent "
+            "with strong absorption (space getting leased up faster "
+            "than it's added) even in a market whose overall industry "
+            "is growing. \"Fast-growing\" in this tab's title refers to "
+            "growth relative to the rest of the 100-MSA panel, not to "
+            "positive CAGR in absolute terms — most of the panel's CAGR "
+            "is negative too. **LQ Trend** tracks the metro's "
+            "advanced-industry employment location quotient: rising "
+            "means R&D-relevant employment concentration is increasing "
+            "year over year, declining means it's easing."
         )
 
 # ── SHAP feature importance ─────────────────────────────────────────────
@@ -393,7 +459,7 @@ with tab_shap:
     st.subheader("Per-observation detail")
     beeswarm_path = FIGURES_DIR / "lag_counterfactual_shap_beeswarm_v14b.png"
     if beeswarm_path.exists():
-        st.image(str(beeswarm_path), use_container_width=True)
+        st.image(str(beeswarm_path), width=IMAGE_MAX_WIDTH)
         st.markdown(
             "Each dot is one MSA-year observation. A feature's row shows "
             "every observation's individual SHAP value, not just the "
@@ -415,6 +481,7 @@ with tab_casestudies:
         "category, ranking, R&D-employment concentration trend, and "
         "equilibrium status side by side."
     )
+    st.markdown(RANK_VS_PCT_NOTE)
     profiles = load_csv("Market_CaseStudies_Combined_Profile.csv")
     results_hist = load_csv("AvailSFTotal_Counterfactual_Results.csv")
     if profiles is None:
@@ -439,25 +506,31 @@ with tab_casestudies:
         if pct_lookup is not None and msa_pick in pct_lookup.index:
             c2.metric("Structural gap (latest year)", f"{pct_lookup[msa_pick]:+.1f}%")
         if rank_col:
-            c3.metric("Rank (R&D-weighted)", f"#{int(row[rank_col])} of 100")
+            c3.metric("Rank (R&D-weighted, absolute SF)", f"#{int(row[rank_col])} of 100")
+
+        if cat_col:
+            with st.expander("What do these categories mean?"):
+                st.markdown(category_explainer_text())
 
         if gap_sf_col:
             st.caption(
                 f"R&D-weighted mean gap, 2020–2023 (raw square footage, "
-                f"a different metric from the percentage above): "
-                f"{fmt_sf(row[gap_sf_col])}"
+                f"drives the rank above — a different metric from the "
+                f"percentage shown): {fmt_sf(row[gap_sf_col])}"
             )
 
         if msa_pick in CASE_STUDY_IMAGES:
             img_path = FIGURES_DIR / CASE_STUDY_IMAGES[msa_pick]
             if img_path.exists():
-                st.image(str(img_path), use_container_width=True)
+                st.image(str(img_path), width=IMAGE_MAX_WIDTH)
             else:
                 st.info(f"Figure not found at `figures/{CASE_STUDY_IMAGES[msa_pick]}`.")
         else:
             st.caption(
-                "No pre-built multi-panel figure for this MSA — showing "
-                "profile data only."
+                "No pre-built multi-panel figure exists for this MSA yet "
+                "— the original analysis only generated these for "
+                "Seattle, Houston, and Philadelphia. Profile data is "
+                "shown below regardless."
             )
 
         if conv_col is not None:
